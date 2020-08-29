@@ -18,6 +18,14 @@
 		312A321224F95288005E0A1C /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312A321124F95288005E0A1C /* SignInViewController.swift */; };
 		312A321424F952A2005E0A1C /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312A321324F952A2005E0A1C /* SignUpViewController.swift */; };
 		312A321724F96475005E0A1C /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312A321624F96475005E0A1C /* Extensions.swift */; };
+		31CA206B24FA176F005103AE /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CA206A24FA176F005103AE /* HomeViewController.swift */; };
+		31CA206D24FA1782005103AE /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CA206C24FA1782005103AE /* SettingsViewController.swift */; };
+		31CA206F24FA17AC005103AE /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CA206E24FA17AC005103AE /* NotificationViewController.swift */; };
+		31CA207124FA17BE005103AE /* SurveyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CA207024FA17BE005103AE /* SurveyViewController.swift */; };
+		31CA207324FA17F0005103AE /* AboutUsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CA207224FA17F0005103AE /* AboutUsViewController.swift */; };
+		31CA207524FA17FC005103AE /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CA207424FA17FC005103AE /* UserProfileViewController.swift */; };
+		31CA207724FA182A005103AE /* SafeActionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CA207624FA182A005103AE /* SafeActionsViewController.swift */; };
+		31CA207924FA183D005103AE /* UpdateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CA207824FA183D005103AE /* UpdateViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +63,14 @@
 		312A321124F95288005E0A1C /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
 		312A321324F952A2005E0A1C /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		312A321624F96475005E0A1C /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		31CA206A24FA176F005103AE /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		31CA206C24FA1782005103AE /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		31CA206E24FA17AC005103AE /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
+		31CA207024FA17BE005103AE /* SurveyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyViewController.swift; sourceTree = "<group>"; };
+		31CA207224FA17F0005103AE /* AboutUsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutUsViewController.swift; sourceTree = "<group>"; };
+		31CA207424FA17FC005103AE /* UserProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
+		31CA207624FA182A005103AE /* SafeActionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeActionsViewController.swift; sourceTree = "<group>"; };
+		31CA207824FA183D005103AE /* UpdateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,6 +157,14 @@
 				3112F9CC24EDBF28004A3BA0 /* MainViewController.swift */,
 				312A321124F95288005E0A1C /* SignInViewController.swift */,
 				312A321324F952A2005E0A1C /* SignUpViewController.swift */,
+				31CA206A24FA176F005103AE /* HomeViewController.swift */,
+				31CA206C24FA1782005103AE /* SettingsViewController.swift */,
+				31CA206E24FA17AC005103AE /* NotificationViewController.swift */,
+				31CA207024FA17BE005103AE /* SurveyViewController.swift */,
+				31CA207224FA17F0005103AE /* AboutUsViewController.swift */,
+				31CA207424FA17FC005103AE /* UserProfileViewController.swift */,
+				31CA207624FA182A005103AE /* SafeActionsViewController.swift */,
+				31CA207824FA183D005103AE /* UpdateViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -283,13 +307,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				31CA206F24FA17AC005103AE /* NotificationViewController.swift in Sources */,
+				31CA207124FA17BE005103AE /* SurveyViewController.swift in Sources */,
 				312A321424F952A2005E0A1C /* SignUpViewController.swift in Sources */,
 				3112F9CD24EDBF28004A3BA0 /* MainViewController.swift in Sources */,
+				31CA207324FA17F0005103AE /* AboutUsViewController.swift in Sources */,
 				3112F9D324EDBF28004A3BA0 /* NIBM_COVID19.xcdatamodeld in Sources */,
+				31CA206B24FA176F005103AE /* HomeViewController.swift in Sources */,
 				3112F9C924EDBF28004A3BA0 /* AppDelegate.swift in Sources */,
+				31CA207524FA17FC005103AE /* UserProfileViewController.swift in Sources */,
+				31CA207724FA182A005103AE /* SafeActionsViewController.swift in Sources */,
 				312A321224F95288005E0A1C /* SignInViewController.swift in Sources */,
 				3112F9CB24EDBF28004A3BA0 /* SceneDelegate.swift in Sources */,
 				312A321724F96475005E0A1C /* Extensions.swift in Sources */,
+				31CA206D24FA1782005103AE /* SettingsViewController.swift in Sources */,
+				31CA207924FA183D005103AE /* UpdateViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -463,7 +495,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.nibm.cobsccomp191p-009.NIBM-COVID19";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -480,7 +512,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.nibm.cobsccomp191p-009.NIBM-COVID19";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
