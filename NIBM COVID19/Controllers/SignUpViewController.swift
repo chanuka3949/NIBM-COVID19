@@ -19,6 +19,13 @@ class SignUpViewController: UIViewController {
         return label
     }()
     
+    private let userRoleSegmentedControl: UISegmentedControl = {
+        let segmentedControl = UISegmentedControl(items: ["Student", "Staff"])
+        segmentedControl.selectedSegmentTintColor = UIColor(red: 166/255, green: 76/255, blue: 120/255, alpha: 1)
+        segmentedControl.selectedSegmentIndex = 0
+        return segmentedControl
+    }()
+    
     private lazy var termsOfAgreementLabel: UILabel = {
         var firstString = NSMutableAttributedString(string: "By signing up, you agree with the ",  attributes: [.foregroundColor: UIColor.black])
         var secondString = NSMutableAttributedString(string: "Terms of Service ", attributes: [
@@ -151,7 +158,7 @@ class SignUpViewController: UIViewController {
         titleLabel.topAnchor.constraint(equalTo: popViewControllerButton.bottomAnchor,
                                         constant: 20).isActive = true
         
-        let signUpStackView = UIStackView(arrangedSubviews: [firstNameTextField, lastNameTextField, emailTextField, roleTextField, passwordTextField])
+        let signUpStackView = UIStackView(arrangedSubviews: [firstNameTextField, lastNameTextField, emailTextField, userRoleSegmentedControl, passwordTextField])
         signUpStackView.axis = .vertical
         signUpStackView.distribution = .fillEqually
         signUpStackView.spacing = 15

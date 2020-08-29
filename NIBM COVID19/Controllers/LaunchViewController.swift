@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MainViewController: UIViewController {
+class LaunchViewController: UIViewController {
     
     // MARK: - Properties
     
