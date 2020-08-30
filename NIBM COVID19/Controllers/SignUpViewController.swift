@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class SignUpViewController: UIViewController {
     
@@ -68,13 +69,6 @@ class SignUpViewController: UIViewController {
         return textField
     }()
     
-    private lazy var roleTextField: UITextField = {
-        let textField = UITextField()
-        textField.borderStyle = .roundedRect
-        textField.placeholder = "Role"
-        return textField
-    }()
-    
     private lazy var passwordTextField: UITextField = {
         let textField = UITextField()
         textField.borderStyle = .roundedRect
@@ -116,11 +110,11 @@ class SignUpViewController: UIViewController {
     }()
     
     @objc func popViewController() {
-        navigationController?.popViewController(animated: true)
+        //navigationController?.popViewController(animated: true)
     }
     
     @objc func handleAlreadyHaveAnAccount() {
-        if ((navigationController?.viewControllers.count)! > 2) {
+        if ((navigationController?.viewControllers.count)! > 3) {
             navigationController?.popViewController(animated: true)
         } else {
             let signInViewController = SignInViewController()
@@ -129,19 +123,42 @@ class SignUpViewController: UIViewController {
     }
     
     @objc func handleSignUp() {
+        guard let email = emailTextField.text else { return }
+        guard let password = passwordTextField.text else { return }
+        guard let firstName = firstNameTextField.text else { return }
+        guard let lastName = lastNameTextField.text else { return }
+        let role = userRoleSegmentedControl.selectedSegmentIndex
         
+        Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
+            if let error = error {
+                print("Failed to register user with error \(error)")
+                return
+            }
+            
+            guard let uid = result?.user.uid else { return }
+            
+            let values = [
+                "firstName": firstName,
+                "lastName": lastName,
+                "role": role
+                ] as [String : Any]
+            
+            Database.database().reference().child("users").child(uid).updateChildValues(values) { (error, ref) in
+                print("Successfuly Registerd and Profile created")
+            }
+        }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationController?.navigationBar.isHidden = true
+        
         setupUserInterface()
         
     }
     
     
     func setupUserInterface() {
-        
+        //navigationController?.navigationBar.isHidden = true
         view.backgroundColor = .white
         
         view.addSubview(popViewControllerButton)

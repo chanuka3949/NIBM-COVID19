@@ -10,6 +10,7 @@ import UIKit
 
 class SafeActionsViewController: UIViewController {
 
+        // MARK: - Properties
     override func viewDidLoad() {
         super.viewDidLoad()
 

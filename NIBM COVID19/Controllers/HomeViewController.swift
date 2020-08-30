@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class HomeViewController: UIViewController {
     
@@ -100,20 +101,41 @@ class HomeViewController: UIViewController {
         return button
     }()
     
+    private lazy var signOutButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Sign Out", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.layer.cornerRadius = 5
+        button.layer.borderWidth = 0.5
+        button.addTarget(self, action: #selector(handleSignOut), for: .touchUpInside)
+        return button
+    }()
+    
+    @objc func handleSignOut()  {
+        let authenticatedUser = Auth.auth()
+        do {
+            try authenticatedUser.signOut()
+            let launchViewController = UINavigationController(rootViewController: LaunchViewController())
+            launchViewController.modalPresentationStyle = .fullScreen
+            self.present(launchViewController, animated: true, completion: nil)
+        } catch let signOutError as NSError {
+            print ("Error signing out: %@", signOutError)
+        }
+    }
+    
     private lazy var logoImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "Logo")
         return imageView
     }()
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationController?.navigationBar.isHidden = true
         setupUserInterface()
     }
     
     func setupUserInterface() {
+        //navigationController?.navigationBar.isHidden = true
         view.backgroundColor = .white
         let safetyActionsStackView = UIStackView(arrangedSubviews: [stayHomelabel, safeActionsButton])
         safetyActionsStackView.axis = .vertical
@@ -138,7 +160,10 @@ class HomeViewController: UIViewController {
         safetyActionsLogoStackView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor,
                                                          constant: 20).isActive = true
         
-        
+        view.addSubview(signOutButton)
+        signOutButton.translatesAutoresizingMaskIntoConstraints = false
+        signOutButton.topAnchor.constraint(equalTo: safetyActionsStackView.bottomAnchor, constant: 20).isActive = true
+        signOutButton.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
     }
     
     /*

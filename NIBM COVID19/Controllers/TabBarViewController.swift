@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class TabBarViewController: UITabBarController {
     
@@ -14,6 +15,23 @@ class TabBarViewController: UITabBarController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        checkUserAuthStatus()
+    }
+    
+    func checkUserAuthStatus(){
+        if Auth.auth().currentUser != nil {
+            setupUserInterface()
+        } else {
+            DispatchQueue.main.async {
+                let launchViewController = UINavigationController(rootViewController: LaunchViewController())
+                launchViewController.modalPresentationStyle = .fullScreen
+                self.present(launchViewController, animated: false, completion: nil)
+            }
+            
+        }
+    }
+    
+    func setupUserInterface() {
         navigationController?.navigationBar.isHidden = true
         let homeVC = HomeViewController()
         
@@ -30,11 +48,7 @@ class TabBarViewController: UITabBarController {
         let controllerList = [homeVC, UpdateVC, settingsVC]
         viewControllers = controllerList
 //        viewControllers = controllerList.map { UINavigationController(rootViewController: $0) }
-        
-        
     }
-    
-    
     
     /*
      // MARK: - Navigation

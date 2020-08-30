@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class SignInViewController: UIViewController {
     
@@ -65,7 +66,7 @@ class SignInViewController: UIViewController {
     }()
     
     @objc func handleNeedAnAccount() {
-        if ((navigationController?.viewControllers.count)! > 2) {
+        if ((navigationController?.viewControllers.count)! > 3) {
             navigationController?.popViewController(animated: true)
         } else {
             let signUpViewController = SignUpViewController()
@@ -75,23 +76,40 @@ class SignInViewController: UIViewController {
     }
     
     @objc func handleSignIn() {
+        guard let email = emailTextField.text else { return }
+        guard let password = passwordTextField.text else { return }
         
+        Auth.auth().signIn(withEmail: email, password: password) { (result, error) in
+            if let error = error {
+                print("Failed to login user with error \(error)")
+                return
+            }
+            let keyWindow = UIApplication.shared.connectedScenes
+                .filter({$0.activationState == .foregroundActive})
+                .map({$0 as? UIWindowScene})
+                .compactMap({$0})
+                .first?.windows
+                .filter({$0.isKeyWindow}).first
+            
+            guard let mainViewController = keyWindow?.rootViewController as? TabBarViewController else { return }
+            mainViewController.setupUserInterface()
+            self.dismiss(animated: true, completion: nil)
+        }
     }
     
     @objc func popViewController() {
-        navigationController?.popViewController(animated: true)
+        //navigationController?.popViewController(animated: true)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationController?.navigationBar.isHidden = true
         setupUserInterface()
         
         
     }
     
     func setupUserInterface() {
-        
+        //navigationController?.navigationBar.isHidden = true
         view.backgroundColor = .white
         
         view.addSubview(popViewControllerButton)
