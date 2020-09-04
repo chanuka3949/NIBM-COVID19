@@ -11,33 +11,28 @@ import MapKit
 
 class MapViewController: UIViewController, CLLocationManagerDelegate {
     
+    private let locationManager = LocationService.sharedInstance.locationManager
     private var mapView = MKMapView()
-    private let locationManager = CLLocationManager()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         getLocationServicePermission()
         setupUserLocation()
     }
     
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        if status == .authorizedWhenInUse {
-            locationManager.requestAlwaysAuthorization()
-        }
-    }
-    
     func getLocationServicePermission() {
         
         switch CLLocationManager.authorizationStatus() {
         case .notDetermined:
-            locationManager.requestWhenInUseAuthorization()
+            locationManager?.requestWhenInUseAuthorization()
+        case .authorizedWhenInUse:
+            locationManager?.requestAlwaysAuthorization()
+        case .authorizedAlways:
+            locationManager?.startUpdatingLocation()
+            locationManager?.desiredAccuracy = kCLLocationAccuracyBest
         case .restricted, .denied:
             //give the option to take the user to settings page to allow access
             break
-        case .authorizedWhenInUse:
-            locationManager.requestAlwaysAuthorization()
-        case .authorizedAlways:
-            locationManager.startUpdatingLocation()
-            locationManager.desiredAccuracy = kCLLocationAccuracyBest
         default:
             break
         }
