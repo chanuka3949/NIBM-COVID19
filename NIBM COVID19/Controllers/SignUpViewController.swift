@@ -152,10 +152,10 @@ class SignUpViewController: UIViewController {
             guard let location = self.location else { return }
             
             geoFire.setLocation(location, forKey: uid) { (error) in
-              if (error != nil) {
-                print("An error occured: \(error!)")
-                return
-              }
+                if (error != nil) {
+                    print("An error occured: \(error!)")
+                    return
+                }
                 print("Saved location successfully!")
             }
             

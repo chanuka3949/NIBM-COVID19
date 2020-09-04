@@ -7,6 +7,7 @@
 //
 
 import CoreLocation
+import GeoFire
 
 class LocationService: NSObject, CLLocationManagerDelegate {
     
@@ -28,21 +29,32 @@ class LocationService: NSObject, CLLocationManagerDelegate {
     }
     
     func getLocationServicePermission() {
-           
-           switch CLLocationManager.authorizationStatus() {
-           case .notDetermined:
-               locationManager?.requestWhenInUseAuthorization()
-           case .authorizedWhenInUse:
-               locationManager?.requestAlwaysAuthorization()
-           case .authorizedAlways:
-               locationManager?.startUpdatingLocation()
-               locationManager?.desiredAccuracy = kCLLocationAccuracyBest
-           case .restricted, .denied:
-               //give the option to take the user to settings page to allow access
-               break
-           default:
-               break
-           }
-       }
+        
+        switch CLLocationManager.authorizationStatus() {
+        case .notDetermined:
+            locationManager?.requestWhenInUseAuthorization()
+        case .authorizedWhenInUse:
+            locationManager?.requestAlwaysAuthorization()
+        case .authorizedAlways:
+            locationManager?.startUpdatingLocation()
+            locationManager?.desiredAccuracy = kCLLocationAccuracyBest
+        case .restricted, .denied:
+            //give the option to take the user to settings page to allow access
+            break
+        default:
+            break
+        }
+    }
     
+    func getNearbyUserLocations(location: CLLocation, completion: @escaping(String, CLLocation) -> Void) {
+        let geofireRef = DatabaseService.databaseReference.child(Constants.userLocations)
+        let geoFire = GeoFire(firebaseRef: geofireRef)
+        geofireRef.observe(.value) { (snapshot) in
+            geoFire.query(at: location, withRadius: 50).observe(.keyEntered, with: { (uid, location) in
+                print("DEBUG: User added to map")
+                completion(uid, location)
+            }
+            )
+        }
+    }
 }
