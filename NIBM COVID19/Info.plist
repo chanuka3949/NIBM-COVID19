@@ -49,8 +49,6 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Allow access to photo library?</string>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
@@ -58,7 +56,17 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>We will keep using your location to alert you on any threats on your surroundings</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>We will be using your location to alert you on any threats on your surrondings</string>
+	<key>NSLocationUsageDescription</key>
+	<string>We are using your location to get notify you on any high risk people in your surrounding area</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We are using your location to alert you on any threats on your surroundings</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Need access to get information of your picture from photo library</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Allow access to camera?</string>
+	<string>Need access to capture your photo from camera</string>
 </dict>
 </plist>

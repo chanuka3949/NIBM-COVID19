@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -19,6 +19,8 @@
 		312A321224F95288005E0A1C /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312A321124F95288005E0A1C /* SignInViewController.swift */; };
 		312A321424F952A2005E0A1C /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312A321324F952A2005E0A1C /* SignUpViewController.swift */; };
 		312A321724F96475005E0A1C /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312A321624F96475005E0A1C /* Extensions.swift */; };
+		31AE54EB24FD684600B5B271 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AE54EA24FD684600B5B271 /* Constants.swift */; };
+		31C01A6024FE929800EFF6AD /* DatabaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C01A5F24FE929800EFF6AD /* DatabaseService.swift */; };
 		31CA206B24FA176F005103AE /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CA206A24FA176F005103AE /* HomeViewController.swift */; };
 		31CA206D24FA1782005103AE /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CA206C24FA1782005103AE /* SettingsViewController.swift */; };
 		31CA206F24FA17AC005103AE /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CA206E24FA17AC005103AE /* NotificationViewController.swift */; };
@@ -73,6 +75,8 @@
 		312A321124F95288005E0A1C /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
 		312A321324F952A2005E0A1C /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		312A321624F96475005E0A1C /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		31AE54EA24FD684600B5B271 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		31C01A5F24FE929800EFF6AD /* DatabaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseService.swift; sourceTree = "<group>"; };
 		31CA206A24FA176F005103AE /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		31CA206C24FA1782005103AE /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		31CA206E24FA17AC005103AE /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
@@ -146,6 +150,7 @@
 		3112F9C724EDBF28004A3BA0 /* NIBM COVID19 */ = {
 			isa = PBXGroup;
 			children = (
+				31C01A5A24FE350100EFF6AD /* Models */,
 				312A321524F96444005E0A1C /* Utilities */,
 				312A321024F95204005E0A1C /* Controllers */,
 				3112F9C824EDBF28004A3BA0 /* AppDelegate.swift */,
@@ -200,9 +205,18 @@
 		312A321524F96444005E0A1C /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				31C01A5F24FE929800EFF6AD /* DatabaseService.swift */,
 				312A321624F96475005E0A1C /* Extensions.swift */,
+				31AE54EA24FD684600B5B271 /* Constants.swift */,
 			);
 			path = Utilities;
+			sourceTree = "<group>";
+		};
+		31C01A5A24FE350100EFF6AD /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		6D0F3CC59A2CB7828F1A0311 /* Pods */ = {
@@ -215,7 +229,6 @@
 				C6625F9DABDCDBEDA9A7325C /* Pods-NIBM COVID19Tests.debug.xcconfig */,
 				2E8F732ED66E790B1925DF9A /* Pods-NIBM COVID19Tests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -483,10 +496,12 @@
 				31CA207724FA182A005103AE /* SafeActionsViewController.swift in Sources */,
 				312A321224F95288005E0A1C /* SignInViewController.swift in Sources */,
 				3112F9CB24EDBF28004A3BA0 /* SceneDelegate.swift in Sources */,
+				31C01A6024FE929800EFF6AD /* DatabaseService.swift in Sources */,
 				312A321724F96475005E0A1C /* Extensions.swift in Sources */,
 				31CA206D24FA1782005103AE /* SettingsViewController.swift in Sources */,
 				31CA207924FA183D005103AE /* UpdateViewController.swift in Sources */,
 				31CA207F24FA8DEB005103AE /* MapViewController.swift in Sources */,
+				31AE54EB24FD684600B5B271 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

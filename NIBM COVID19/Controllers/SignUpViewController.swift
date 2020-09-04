@@ -8,10 +8,14 @@
 
 import UIKit
 import Firebase
+import GeoFire
 
 class SignUpViewController: UIViewController {
     
+    
+    
     // MARK: - Properties
+    
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.text = "Create An Account"
@@ -123,16 +127,19 @@ class SignUpViewController: UIViewController {
     }
     
     @objc func handleSignUp() {
+        
         guard let email = emailTextField.text else { return }
         guard let password = passwordTextField.text else { return }
         guard let firstName = firstNameTextField.text else { return }
         guard let lastName = lastNameTextField.text else { return }
         let role = userRoleSegmentedControl.selectedSegmentIndex
         
+        
         Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
             if let error = error {
                 print("Failed to register user with error \(error)")
                 return
+                
             }
             
             guard let uid = result?.user.uid else { return }
@@ -144,9 +151,29 @@ class SignUpViewController: UIViewController {
                 ] as [String : Any]
             
             Database.database().reference().child("users").child(uid).updateChildValues(values) { (error, ref) in
+                if let error = error {
+                    print("Failed to save profile data \(error)")
+                    return
+                }
                 print("Successfuly Registerd and Profile created")
+                
+                let keyWindow = UIApplication.shared.connectedScenes
+                    .filter({$0.activationState == .foregroundActive})
+                    .map({$0 as? UIWindowScene})
+                    .compactMap({$0})
+                    .first?.windows
+                    .filter({$0.isKeyWindow}).first
+
+                guard let mainViewController = keyWindow?.rootViewController as? TabBarViewController else { return }
+                mainViewController.selectedIndex = 2
+                mainViewController.setupUserInterface()
+                mainViewController.navigateToUserProfile()
+                self.dismiss(animated: true, completion: nil)
             }
+            
+            
         }
+        
     }
     
     override func viewDidLoad() {

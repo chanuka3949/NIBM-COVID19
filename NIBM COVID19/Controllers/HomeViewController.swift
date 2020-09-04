@@ -9,7 +9,10 @@
 import UIKit
 import Firebase
 
+
 class HomeViewController: UIViewController {
+    
+    // MARK: - Properties
     
     private lazy var stayHomelabel: UILabel = {
         var firstString = NSMutableAttributedString(string: "All you need is\n",  attributes: [.foregroundColor: UIColor.black])
@@ -132,10 +135,12 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUserInterface()
+        
     }
     
     func setupUserInterface() {
-        //navigationController?.navigationBar.isHidden = true
+        
+        //avigationController?.navigationBar.isHidden = true
         view.backgroundColor = .white
         let safetyActionsStackView = UIStackView(arrangedSubviews: [stayHomelabel, safeActionsButton])
         safetyActionsStackView.axis = .vertical

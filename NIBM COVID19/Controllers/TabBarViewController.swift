@@ -31,8 +31,14 @@ class TabBarViewController: UITabBarController {
         }
     }
     
+    func navigateToUserProfile()  {
+        print("Inside Navigate to user profile")
+        let userProfileViewController = UserProfileViewController()
+        navigationController?.pushViewController(userProfileViewController, animated: true)
+    }
+    
     func setupUserInterface() {
-        navigationController?.navigationBar.isHidden = true
+        //navigationController?.navigationBar.isHidden = true
         let homeVC = HomeViewController()
         
         let UpdateVC = UpdateViewController()
@@ -47,7 +53,7 @@ class TabBarViewController: UITabBarController {
         
         let controllerList = [homeVC, UpdateVC, settingsVC]
         viewControllers = controllerList
-//        viewControllers = controllerList.map { UINavigationController(rootViewController: $0) }
+        //        viewControllers = controllerList.map { UINavigationController(rootViewController: $0) }
     }
     
     /*
