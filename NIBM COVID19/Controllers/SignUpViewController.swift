@@ -15,6 +15,8 @@ class SignUpViewController: UIViewController {
     
     
     // MARK: - Properties
+    private lazy var locationManager = LocationService.sharedInstance.locationManager
+    private lazy var location = LocationService.sharedInstance.locationManager.location
     
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
@@ -137,48 +139,62 @@ class SignUpViewController: UIViewController {
         
         Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
             if let error = error {
-                print("Failed to register user with error \(error)")
+                print("ERROR: Failed to register user \(error)")
                 return
-                
             }
+            print("User registered successfully!")
             
             guard let uid = result?.user.uid else { return }
             
-            let values = [
-                "firstName": firstName,
-                "lastName": lastName,
-                "role": role
-                ] as [String : Any]
+            let geofireRef = DatabaseService.databaseReference.child(Constants.userLocations)
+            let geoFire = GeoFire(firebaseRef: geofireRef)
             
-            Database.database().reference().child("users").child(uid).updateChildValues(values) { (error, ref) in
-                if let error = error {
-                    print("Failed to save profile data \(error)")
-                    return
-                }
-                print("Successfuly Registerd and Profile created")
-                
-                let keyWindow = UIApplication.shared.connectedScenes
-                    .filter({$0.activationState == .foregroundActive})
-                    .map({$0 as? UIWindowScene})
-                    .compactMap({$0})
-                    .first?.windows
-                    .filter({$0.isKeyWindow}).first
-
-                guard let mainViewController = keyWindow?.rootViewController as? TabBarViewController else { return }
-                mainViewController.selectedIndex = 2
-                mainViewController.setupUserInterface()
-                mainViewController.navigateToUserProfile()
-                self.dismiss(animated: true, completion: nil)
+            guard let location = self.location else { return }
+            
+            geoFire.setLocation(location, forKey: uid) { (error) in
+              if (error != nil) {
+                print("An error occured: \(error!)")
+                return
+              }
+                print("Saved location successfully!")
             }
             
-            
+            self.saveUserProfileData(firstName: firstName, lastName: lastName, userRole: role, userId: uid)
         }
-        
     }
     
+    func saveUserProfileData(firstName: String, lastName: String, userRole: Int, userId: String) {
+        
+        let values = [
+            "firstName": firstName,
+            "lastName": lastName,
+            "role": userRole
+            ] as [String : Any]
+        
+        Database.database().reference().child(Constants.users).child(userId).updateChildValues(values) { (error, ref) in
+            if let error = error {
+                print("ERROR: Could not save user data to database \(error)")
+                return
+            }
+            print("Successfuly Registerd and Profile created")
+            self.navigateToTabViewController()
+        }
+    }
+    
+    func navigateToTabViewController() {
+        let keyWindow = UIApplication.shared.connectedScenes
+            .filter({$0.activationState == .foregroundActive})
+            .map({$0 as? UIWindowScene})
+            .compactMap({$0})
+            .first?.windows
+            .filter({$0.isKeyWindow}).first
+        
+        guard let mainViewController = keyWindow?.rootViewController as? TabBarViewController else { return }
+        mainViewController.setupUserInterface()
+        self.dismiss(animated: true, completion: nil)
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupUserInterface()
         
     }

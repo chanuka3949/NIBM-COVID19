@@ -31,12 +31,6 @@ class TabBarViewController: UITabBarController {
         }
     }
     
-    func navigateToUserProfile()  {
-        print("Inside Navigate to user profile")
-        let userProfileViewController = UserProfileViewController()
-        navigationController?.pushViewController(userProfileViewController, animated: true)
-    }
-    
     func setupUserInterface() {
         //navigationController?.navigationBar.isHidden = true
         let homeVC = HomeViewController()

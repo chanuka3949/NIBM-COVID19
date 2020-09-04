@@ -8,6 +8,7 @@
 
 import Firebase
 
-class DatabaseService {
-
+struct DatabaseService {
+    static let sharedInstance = DatabaseService()
+    static let databaseReference = Database.database().reference()
 }

@@ -26,4 +26,23 @@ class LocationService: NSObject, CLLocationManagerDelegate {
             locationManager.requestAlwaysAuthorization()
         }
     }
+    
+    func getLocationServicePermission() {
+           
+           switch CLLocationManager.authorizationStatus() {
+           case .notDetermined:
+               locationManager?.requestWhenInUseAuthorization()
+           case .authorizedWhenInUse:
+               locationManager?.requestAlwaysAuthorization()
+           case .authorizedAlways:
+               locationManager?.startUpdatingLocation()
+               locationManager?.desiredAccuracy = kCLLocationAccuracyBest
+           case .restricted, .denied:
+               //give the option to take the user to settings page to allow access
+               break
+           default:
+               break
+           }
+       }
+    
 }

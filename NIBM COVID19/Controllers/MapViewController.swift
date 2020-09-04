@@ -10,34 +10,14 @@ import UIKit
 import MapKit
 
 class MapViewController: UIViewController, CLLocationManagerDelegate {
-    
-    private let locationManager = LocationService.sharedInstance.locationManager
-    private var mapView = MKMapView()
+
+    private lazy var mapView = MKMapView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        getLocationServicePermission()
+        LocationService.sharedInstance.getLocationServicePermission()
         setupUserLocation()
     }
-    
-    func getLocationServicePermission() {
-        
-        switch CLLocationManager.authorizationStatus() {
-        case .notDetermined:
-            locationManager?.requestWhenInUseAuthorization()
-        case .authorizedWhenInUse:
-            locationManager?.requestAlwaysAuthorization()
-        case .authorizedAlways:
-            locationManager?.startUpdatingLocation()
-            locationManager?.desiredAccuracy = kCLLocationAccuracyBest
-        case .restricted, .denied:
-            //give the option to take the user to settings page to allow access
-            break
-        default:
-            break
-        }
-    }
-    
     
     func setupUserLocation() {
         view.addSubview(mapView)
