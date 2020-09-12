@@ -12,15 +12,16 @@ import MapKit
 class MapViewController: UIViewController {
     
     private lazy var mapView = MKMapView()
-    private lazy var locationManager = LocationService.sharedInstance.locationManager
+    private var locationManager = LocationHandler.sharedInstance.locationManager
     override func viewDidLoad() {
         super.viewDidLoad()
-        LocationService.sharedInstance.getLocationServicePermission()
+        LocationHandler.sharedInstance.getLocationServicePermission()
         setupUserLocation()
         getNearbyUsers()
     }
     
     func setupUserLocation() {
+
         mapView.delegate = self
         view.addSubview(mapView)
         mapView.frame = view.frame
@@ -34,7 +35,7 @@ class MapViewController: UIViewController {
     func getNearbyUsers() {
         guard let location = locationManager?.location else {return}
         print("Getting nearby users")
-        LocationService.sharedInstance.getNearbyUserLocations(location: location) { (uid, location) in
+        LocationHandler.sharedInstance.getNearbyUserLocations(location: location) { (uid, location) in
             print("DEBUG: \(uid)")
             print("DEBUG: \(location)")
             //get health data to get risk level and change the annotation color accordingly

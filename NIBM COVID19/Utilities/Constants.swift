@@ -11,4 +11,5 @@ import Foundation
 struct Constants {
     static let userLocations = "user-locations"
     static let users = "users"
+    static let surveyResults = "survey-results"
 }

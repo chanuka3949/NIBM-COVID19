@@ -140,7 +140,7 @@ class HomeViewController: UIViewController {
     
     func setupUserInterface() {
         
-        //avigationController?.navigationBar.isHidden = true
+//        navigationController?.navigationBar.isHidden = true
         view.backgroundColor = .white
         let safetyActionsStackView = UIStackView(arrangedSubviews: [stayHomelabel, safeActionsButton])
         safetyActionsStackView.axis = .vertical

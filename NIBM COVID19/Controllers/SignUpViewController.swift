@@ -15,8 +15,7 @@ class SignUpViewController: UIViewController {
     
     
     // MARK: - Properties
-    private lazy var locationManager = LocationService.sharedInstance.locationManager
-    private lazy var location = LocationService.sharedInstance.locationManager.location
+    private var locationManager = LocationHandler.sharedInstance.locationManager
     
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
@@ -143,14 +142,15 @@ class SignUpViewController: UIViewController {
                 return
             }
             print("User registered successfully!")
-            
+
             guard let uid = result?.user.uid else { return }
             
             let geofireRef = DatabaseService.databaseReference.child(Constants.userLocations)
             let geoFire = GeoFire(firebaseRef: geofireRef)
             
-            guard let location = self.location else { return }
-            
+            print("UserLocation\(self.locationManager?.location)")
+            guard let location = self.locationManager?.location else { return }
+
             geoFire.setLocation(location, forKey: uid) { (error) in
                 if (error != nil) {
                     print("An error occured: \(error!)")
@@ -196,7 +196,6 @@ class SignUpViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUserInterface()
-        
     }
     
     

@@ -11,11 +11,10 @@ import Firebase
 
 class TabBarViewController: UITabBarController {
     
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         checkUserAuthStatus()
+        LocationHandler.sharedInstance.getLocationServicePermission()
     }
     
     func checkUserAuthStatus(){
@@ -32,7 +31,7 @@ class TabBarViewController: UITabBarController {
     }
     
     func setupUserInterface() {
-        //navigationController?.navigationBar.isHidden = true
+//        navigationController?.navigationBar.isHidden = true
         let homeVC = HomeViewController()
         
         let UpdateVC = UpdateViewController()
@@ -46,8 +45,8 @@ class TabBarViewController: UITabBarController {
         settingsVC.tabBarItem = UITabBarItem(tabBarSystemItem: .bookmarks, tag: 2)
         
         let controllerList = [homeVC, UpdateVC, settingsVC]
-        viewControllers = controllerList
-        //        viewControllers = controllerList.map { UINavigationController(rootViewController: $0) }
+//        viewControllers = controllerList
+        viewControllers = controllerList.map { UINavigationController(rootViewController: $0) }
     }
     
     /*

@@ -9,9 +9,9 @@
 import CoreLocation
 import GeoFire
 
-class LocationService: NSObject, CLLocationManagerDelegate {
+class LocationHandler: NSObject, CLLocationManagerDelegate {
     
-    static let sharedInstance = LocationService()
+    static let sharedInstance = LocationHandler()
     
     var locationManager: CLLocationManager!
     var location: CLLocation?

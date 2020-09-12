@@ -16,13 +16,72 @@ class UpdateViewController: UIViewController {
         return label
     }()
     
+    private lazy var surveyButton: UIButton = {
+           let button = UIButton()
+           button.setTitle("Survey", for: .normal)
+           button.setTitleColor(.white, for: .normal)
+           button.setTitleColor(.black, for: .highlighted)
+           button.layer.cornerRadius = 5
+           button.backgroundColor = UIColor(red: 166/255, green: 76/255, blue: 120/255, alpha: 1)
+           button.addTarget(self, action: #selector(takeSurvey), for: .touchUpInside)
+           return button
+       }()
+    
+    @objc func takeSurvey() {
+        let surveyViewController = SurveyViewController()
+        navigationController?.pushViewController(surveyViewController, animated: true)
+    }
+    
+    private lazy var showNewsButton: UIButton = {
+            let button = UIButton()
+            button.setTitle("Survey", for: .normal)
+            button.setTitleColor(.white, for: .normal)
+            button.setTitleColor(.black, for: .highlighted)
+            button.layer.cornerRadius = 5
+            button.backgroundColor = UIColor(red: 166/255, green: 76/255, blue: 120/255, alpha: 1)
+            button.addTarget(self, action: #selector(showNews), for: .touchUpInside)
+            return button
+        }()
+     
+     @objc func showNews() {
+         let surveyViewController = SurveyViewController()
+         navigationController?.pushViewController(surveyViewController, animated: true)
+     }
+    
+    private lazy var updateTemperatureButton: UIButton = {
+            let button = UIButton()
+            button.setTitle("Survey", for: .normal)
+            button.setTitleColor(.white, for: .normal)
+            button.setTitleColor(.black, for: .highlighted)
+            button.layer.cornerRadius = 5
+            button.backgroundColor = UIColor(red: 166/255, green: 76/255, blue: 120/255, alpha: 1)
+            button.addTarget(self, action: #selector(updateTemperature), for: .touchUpInside)
+            return button
+        }()
+     
+     @objc func updateTemperature() {
+         let surveyViewController = SurveyViewController()
+         navigationController?.pushViewController(surveyViewController, animated: true)
+     }
+    
+    private lazy var temperatureTextField: UITextField = {
+        let textField = UITextField()
+        textField.borderStyle = .roundedRect
+        textField.placeholder = "Temperature"
+        return textField
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.navigationBar.isHidden = true
-        view.addSubview(label)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor, constant: 0).isActive = true
-        label.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor, constant: 0).isActive = true
+        surveyButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(surveyButton)
+        surveyButton.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 0).isActive = true
+        surveyButton.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
+//        view.addSubview(label)
+//        label.translatesAutoresizingMaskIntoConstraints = false
+//        label.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor, constant: 0).isActive = true
+//        label.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor, constant: 0).isActive = true
         // Do any additional setup after loading the view.
     }
     

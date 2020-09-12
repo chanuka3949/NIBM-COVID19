@@ -21,7 +21,7 @@
 		312A321724F96475005E0A1C /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312A321624F96475005E0A1C /* Extensions.swift */; };
 		31AE54EB24FD684600B5B271 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AE54EA24FD684600B5B271 /* Constants.swift */; };
 		31C01A6024FE929800EFF6AD /* DatabaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C01A5F24FE929800EFF6AD /* DatabaseService.swift */; };
-		31C72CDC25021CA30027B243 /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C72CDB25021CA30027B243 /* LocationService.swift */; };
+		31C72CDC25021CA30027B243 /* LocationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C72CDB25021CA30027B243 /* LocationHandler.swift */; };
 		31C72CDE250271FE0027B243 /* UserAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C72CDD250271FE0027B243 /* UserAnnotation.swift */; };
 		31CA206B24FA176F005103AE /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CA206A24FA176F005103AE /* HomeViewController.swift */; };
 		31CA206D24FA1782005103AE /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CA206C24FA1782005103AE /* SettingsViewController.swift */; };
@@ -79,7 +79,7 @@
 		312A321624F96475005E0A1C /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		31AE54EA24FD684600B5B271 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		31C01A5F24FE929800EFF6AD /* DatabaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseService.swift; sourceTree = "<group>"; };
-		31C72CDB25021CA30027B243 /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
+		31C72CDB25021CA30027B243 /* LocationHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationHandler.swift; sourceTree = "<group>"; };
 		31C72CDD250271FE0027B243 /* UserAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAnnotation.swift; sourceTree = "<group>"; };
 		31CA206A24FA176F005103AE /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		31CA206C24FA1782005103AE /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
@@ -212,7 +212,7 @@
 				31C01A5F24FE929800EFF6AD /* DatabaseService.swift */,
 				312A321624F96475005E0A1C /* Extensions.swift */,
 				31AE54EA24FD684600B5B271 /* Constants.swift */,
-				31C72CDB25021CA30027B243 /* LocationService.swift */,
+				31C72CDB25021CA30027B243 /* LocationHandler.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -491,7 +491,7 @@
 			files = (
 				31CA207D24FA353F005103AE /* TabBarViewController.swift in Sources */,
 				31CA206F24FA17AC005103AE /* NotificationViewController.swift in Sources */,
-				31C72CDC25021CA30027B243 /* LocationService.swift in Sources */,
+				31C72CDC25021CA30027B243 /* LocationHandler.swift in Sources */,
 				31CA207124FA17BE005103AE /* SurveyViewController.swift in Sources */,
 				312A321424F952A2005E0A1C /* SignUpViewController.swift in Sources */,
 				3112F9CD24EDBF28004A3BA0 /* LaunchViewController.swift in Sources */,
