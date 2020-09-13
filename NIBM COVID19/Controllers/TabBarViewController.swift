@@ -31,7 +31,6 @@ class TabBarViewController: UITabBarController {
     }
     
     func setupUserInterface() {
-//        navigationController?.navigationBar.isHidden = true
         let homeVC = HomeViewController()
         
         let UpdateVC = UpdateViewController()

@@ -11,5 +11,11 @@ import Foundation
 struct Constants {
     static let userLocations = "user-locations"
     static let users = "users"
+    static let userHealth = "user-health"
     static let surveyResults = "survey-results"
+    static let userTemperature = "user-temperature"
+    static let newsUpdates = "news-updates"
+    static let greenUserImage = "GreenUserImage"
+    static let yellowUserImage = "YellowUserImage"
+    static let redUserImage = "RedUserImage"
 }

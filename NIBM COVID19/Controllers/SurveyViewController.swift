@@ -314,8 +314,9 @@ class SurveyViewController: UIViewController {
                           "questionThree": result.question3,
                           "questionFour": result.question4,
                           "questioFive": result.question5,
-                          "riskLevel": user.riskLevel!] as [String : Any]
-            Database.database().reference().child(Constants.surveyResults).child(uid!).updateChildValues(values) { (error, ref) in
+                          "riskLevel": user.riskLevel!,
+                          "modifiedDate": result.modifiedDate?.timeIntervalSince1970 as Any] as [String : Any]
+            Database.database().reference().child(Constants.userHealth).child(uid!).child(Constants.surveyResults).updateChildValues(values) { (error, ref) in
                 if error != nil {
                     let alert = UIAlertController(title: "An error occurred", message: "Couldn't save survey data on database", preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
@@ -335,25 +336,25 @@ class SurveyViewController: UIViewController {
             navigationController?.popViewController(animated: true)
         }
     }
-    //    func fetchLastReading(uid: String) -> Int16 {
-    //        let filterPredicate = NSPredicate(format: "uid == %@"
-    //            , uid)
-    //        var riskLevel: Int16 = 0
-    //        let sortDescriptor = NSSortDescriptor(key: "modifiedDate", ascending: false)
-    //        let request: NSFetchRequest<SurveyResult> = SurveyResult.fetchRequest()
-    //        request.predicate = filterPredicate
-    //        request.sortDescriptors = [sortDescriptor]
-    //        request.fetchLimit = 1
-    //        do {
-    //            resultList = try context.fetch(request)
-    //            if resultList.count != 0 {
-    //                riskLevel = resultList[0].riskLevel
-    //            }
-    //        } catch {
-    //            print("DEBUG: Error fecthing data from context \(error)")
-    //        }
-    //        return riskLevel
-    //    }
+        func fetchLastReading(uid: String) -> Int16 {
+            let filterPredicate = NSPredicate(format: "uid == %@"
+                , uid)
+            var riskLevel: Int16 = 0
+            let sortDescriptor = NSSortDescriptor(key: "modifiedDate", ascending: false)
+            let request: NSFetchRequest<SurveyResult> = SurveyResult.fetchRequest()
+            request.predicate = filterPredicate
+            request.sortDescriptors = [sortDescriptor]
+            request.fetchLimit = 1
+            do {
+                resultList = try context.fetch(request)
+                if resultList.count != 0 {
+                    riskLevel = resultList[0].riskLevel
+                }
+            } catch {
+                print("DEBUG: Error fecthing data from context \(error)")
+            }
+            return riskLevel
+        }
     func calculateNewRiskLevel(newRiskLevel: Int16) -> String {
         switch newRiskLevel {
         case 5:
