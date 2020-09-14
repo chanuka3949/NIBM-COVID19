@@ -98,12 +98,12 @@ extension UIView {
         imageView.contentMode = .scaleAspectFit
         imageView.image = UIImage(named: imageName)
         view.addSubview(imageView)
-        imageView.setViewConstraints(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, marginTop: 10, width: 50,height: 50)
+        imageView.setViewConstraints(width: 40,height: 40)
         imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         
         
         let countLabel = UILabel()
-        countLabel.font = countLabel.font.withSize(30)
+        countLabel.font = countLabel.font.withSize(40)
         countLabel.text = String(count)
         countLabel.textAlignment = .center
         view.addSubview(countLabel)
@@ -120,6 +120,14 @@ extension UIView {
         typeLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         
         return view
+    }
+    
+    func navigateToView(text: String) -> UIButton {
+        let button = UIButton()
+        button.layer.cornerRadius = 5
+        button.setTitle(text, for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        return button
     }
 }
 
