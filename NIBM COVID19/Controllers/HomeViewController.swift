@@ -13,21 +13,7 @@ import Firebase
 class HomeViewController: UIViewController {
     
     // MARK: - Properties
-    
-    private lazy var universityCaseUpdatelabel: UILabel = {
-        let label = UILabel()
-        label.text = "University case update"
-        label.font = label.font.withSize(20)
-        return label
-    }()
-    private lazy var seeMoreButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("See More", for: .normal)
-        button.setTitleColor(.systemBlue, for: .normal)
-        button.addTarget(self, action: #selector(viewMap), for: .touchUpInside)
-        return button
-    }()
-    
+        
     private lazy var stayHomelabel: UILabel = {
         var firstString = NSMutableAttributedString(string: "All you need is\n",  attributes: [.foregroundColor: UIColor.black])
         var secondString = NSMutableAttributedString(string: "stay at home", attributes: [
@@ -41,14 +27,25 @@ class HomeViewController: UIViewController {
         return label
     }()
     
-    private let satusImageView: UIImageView = {
+    private lazy var logoImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.layer.cornerRadius = 10
-        imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: Constants.greenUserImage)
+        imageView.image = UIImage(named: "Logo")
         return imageView
     }()
     
+    private lazy var safeActionsButton: UIButton = {
+           let button = UIButton()
+           var firstString = NSMutableAttributedString(string: "Safe Actions ",  attributes: [.foregroundColor: UIColor.black])
+           var secondString = NSMutableAttributedString(string: "›", attributes: [
+               .foregroundColor: UIColor.black, .font : UIFont.boldSystemFont(ofSize: 20)
+           ])
+           firstString.append(secondString)
+           button.setAttributedTitle(firstString, for: .normal)
+           button.contentHorizontalAlignment = .left
+           
+           return button
+       }()
+
     private let statusLabel: UILabel = {
         let label = UILabel()
         label.text = "No risk of infection in this area"
@@ -56,36 +53,22 @@ class HomeViewController: UIViewController {
         return label
     }()
     
-    private lazy var statusView: UIView = {
+    private let statusView: UIView = {
         let view = UIView()
-        view.backgroundColor = .white
-        view.addSubview(satusImageView)
-        view.addSubview(statusLabel)
+        view.backgroundColor = .orange
+        view.layer.cornerRadius = 5
         return view
     }()
     
-    private lazy var safeActionsButton: UIButton = {
-        let button = UIButton()
-        var firstString = NSMutableAttributedString(string: "Safe Actions ",  attributes: [.foregroundColor: UIColor.black])
-        var secondString = NSMutableAttributedString(string: "›", attributes: [
-            .foregroundColor: UIColor.black, .font : UIFont.boldSystemFont(ofSize: 20)
-        ])
-        firstString.append(secondString)
-        button.setAttributedTitle(firstString, for: .normal)
-        button.contentHorizontalAlignment = .left
-        
-        return button
-    }()
-    
-    private lazy var signOutButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("Sign Out", for: .normal)
-        button.setTitleColor(.black, for: .normal)
-        button.layer.cornerRadius = 5
-        button.layer.borderWidth = 0.5
-        button.addTarget(self, action: #selector(handleSignOut), for: .touchUpInside)
-        return button
-    }()
+//    private lazy var signOutButton: UIButton = {
+//        let button = UIButton()
+//        button.setTitle("Sign Out", for: .normal)
+//        button.setTitleColor(.black, for: .normal)
+//        button.layer.cornerRadius = 5
+//        button.layer.borderWidth = 0.5
+//        button.addTarget(self, action: #selector(handleSignOut), for: .touchUpInside)
+//        return button
+//    }()
     
     private lazy var notificationView: UIView = {
         let view = UIView()
@@ -100,6 +83,17 @@ class HomeViewController: UIViewController {
         label.font = label.font.withSize(14)
         label.numberOfLines = 0
         return label
+    }()
+    
+    private lazy var newsTitleLabel: UILabel = {
+       let label = UILabel()
+        label.text = "Latest News Updates"
+        return label
+    }()
+    
+    private lazy var latestNews: UIView = {
+       let view = UIView()
+        return view
     }()
     
     private lazy var viewNotificationsButton: UIButton = {
@@ -128,13 +122,19 @@ class HomeViewController: UIViewController {
         }
     }
     
-    private lazy var logoImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(named: "Logo")
-        return imageView
+    private lazy var universityCaseUpdatelabel: UILabel = {
+        let label = UILabel()
+        label.text = "University case update"
+        label.font = label.font.withSize(20)
+        return label
     }()
-    
-    
+    private lazy var seeMoreButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("See More", for: .normal)
+        button.setTitleColor(.systemBlue, for: .normal)
+        button.addTarget(self, action: #selector(viewMap), for: .touchUpInside)
+        return button
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -173,19 +173,20 @@ class HomeViewController: UIViewController {
         let summaryDataStackView = UIStackView(arrangedSubviews: [notInfectedSummaryView, highRiskSummaryView, lowRiskSummaryView])
         summaryDataStackView.axis = .horizontal
         summaryDataStackView.distribution = .fillEqually
-        //        summaryDataStackView.insertSubview(backgroundView, at: 0)
-        //        view.addSubview(summaryDataStackView)
         
-        let healthSummaryStackView = UIStackView(arrangedSubviews: [summaryTitleStackView, summaryDataStackView, statusView])
+        let healthSummaryStackView = UIStackView(arrangedSubviews: [summaryTitleStackView, summaryDataStackView])
         healthSummaryStackView.axis = .vertical
         healthSummaryStackView.insertSubview(backgroundView, at: 0)
         view.addSubview(healthSummaryStackView)
-        
-         statusLabel.setViewConstraints(top: summaryDataStackView.bottomAnchor, left: healthSummaryStackView.rightAnchor, marginTop: 100, marginLeft: 0, width: view.frame.size.width/3, height: 150)
-         satusImageView.setViewConstraints(top: statusLabel.bottomAnchor, left: healthSummaryStackView.rightAnchor, marginTop: 100, marginLeft: 0, width: view.frame.size.width/3, height: 150)
+
+        statusView.addSubview(statusLabel)
+              statusLabel.setViewConstraints(top: statusView.topAnchor, bottom: statusView.bottomAnchor, left: statusView.leftAnchor, right: statusView.rightAnchor, marginTop: 10, marginBottom: 10, marginLeft: 10, marginRight: 10, width: statusView.frame.size.width, height: statusView.frame.size.height)
+        view.addSubview(statusView)
         
         backgroundView.setViewConstraints(top: healthSummaryStackView.topAnchor, bottom: healthSummaryStackView.bottomAnchor, left: healthSummaryStackView.leftAnchor, right: healthSummaryStackView.rightAnchor, marginTop: 0, marginBottom: 0, marginLeft: 0, marginRight: 0, width: healthSummaryStackView.frame.size.width, height: healthSummaryStackView.frame.size.width)
-        healthSummaryStackView.setViewConstraints(bottom: view.safeAreaLayoutGuide.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 0, marginBottom: 0, width: view.frame.size.width, height: 300)
+        healthSummaryStackView.setViewConstraints(bottom: statusView.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 0, marginBottom: 10, width: view.frame.size.width, height: 180)
+    
+        statusView.setViewConstraints(top: healthSummaryStackView.bottomAnchor,bottom: view.safeAreaLayoutGuide.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 10, marginBottom: 10, marginLeft: 10, marginRight: 10, width: view.frame.size.width , height: 75)
     }
     
     func setupSafetyActions() {
