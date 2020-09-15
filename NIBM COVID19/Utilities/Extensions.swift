@@ -122,13 +122,6 @@ extension UIView {
         return view
     }
     
-    func navigateToView(text: String) -> UIButton {
-        let button = UIButton()
-        button.layer.cornerRadius = 5
-        button.setTitle(text, for: .normal)
-        button.setTitleColor(.black, for: .normal)
-        return button
-    }
 }
 
 //extension UIStackView {

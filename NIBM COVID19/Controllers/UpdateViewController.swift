@@ -14,52 +14,87 @@ class UpdateViewController: UIViewController {
     private let uid = Auth.auth().currentUser?.uid
     private let spinner = UIActivityIndicatorView(style: .large)
     
-    let label: UILabel = {
-        let label = UILabel()
-        label.text = "Hello From Update"
-        return label
+    private lazy var updateTemperatureButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Update", for: .normal)
+        button.layer.cornerRadius = 5
+        button.backgroundColor = .white
+        button.setTitleColor(.black, for: .normal)
+        button.addTarget(self, action: #selector(updateTemperature), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var createNewsItemButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Create News Item", for: .normal)
+        button.layer.cornerRadius = 5
+        button.backgroundColor = .white
+        button.setTitleColor(.black, for: .normal)
+        button.addTarget(self, action: #selector(createNewsItem), for: .touchUpInside)
+        return button
     }()
     
     private lazy var surveyButton: UIButton = {
         let button = UIButton()
         button.setTitle("Take Survey", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.setTitleColor(.black, for: .highlighted)
-        button.backgroundColor = UIColor(red: 166/255, green: 76/255, blue: 120/255, alpha: 1)
+        button.layer.cornerRadius = 5
+        button.backgroundColor = .white
+        button.setTitleColor(.black, for: .normal)
         button.addTarget(self, action: #selector(takeSurvey), for: .touchUpInside)
         return button
     }()
+    
+    private lazy var lastUpdatedTemperatureLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 25, weight: UIFont.Weight.light)
+        label.textColor = .black
+        label.text = "Checking..."
+        return label
+    }()
+    
+    private lazy var lastUpdatedTemperatureDateLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.light)
+        label.textColor = .lightGray
+        label.text = "Last Updated..."
+        return label
+    }()
+    
+    private lazy var temperatureTextField: UITextField = {
+        let textField = UITextField()
+        textField.borderStyle = .roundedRect
+        textField.placeholder = "Temperature"
+        textField.keyboardType = .numberPad
+        return textField
+    }()
+    
+    func fetchUserTemperatureDate(uid: String) {
+        Database.database().reference().child(Constants.userHealth).child(uid).child(Constants.userTemperature).observe(.value, with: { (snapshot) in
+            let value = snapshot.value as? NSDictionary
+            
+            self.lastUpdatedTemperatureLabel.text = value?["temperature"] as? String
+            self.lastUpdatedTemperatureDateLabel.text = value?["modifiedDate"] as? String
+            
+            if self.lastUpdatedTemperatureLabel.text == nil {
+                self.lastUpdatedTemperatureLabel.text = "Not Updated"
+            }
+            if self.lastUpdatedTemperatureDateLabel.text == nil {
+                self.lastUpdatedTemperatureDateLabel.text = "Last Update: Never"
+            }
+        }) { (error) in
+            print("Error Occurred: \(error.localizedDescription)")
+        }
+    }
     
     @objc func takeSurvey() {
         let surveyViewController = SurveyViewController()
         navigationController?.pushViewController(surveyViewController, animated: true)
     }
     
-    private lazy var createNewsItemButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("Create News Item", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.setTitleColor(.black, for: .highlighted)
-        button.backgroundColor = UIColor(red: 166/255, green: 76/255, blue: 120/255, alpha: 1)
-        button.addTarget(self, action: #selector(createNewsItem), for: .touchUpInside)
-        return button
-    }()
-    
     @objc func createNewsItem() {
         let createNewsItemViewController = CreateNewsItemViewController()
         navigationController?.pushViewController(createNewsItemViewController, animated: true)
     }
-    
-    private lazy var updateTemperatureButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("Update", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.setTitleColor(.black, for: .highlighted)
-        button.layer.cornerRadius = 5
-        button.backgroundColor = UIColor(red: 166/255, green: 76/255, blue: 120/255, alpha: 1)
-        button.addTarget(self, action: #selector(updateTemperature), for: .touchUpInside)
-        return button
-    }()
     
     @objc func updateTemperature() {
         guard temperatureTextField.text != nil else {
@@ -73,6 +108,7 @@ class UpdateViewController: UIViewController {
                 alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
                 self.present(alert, animated: true)
             }
+            self.temperatureTextField.text = ""
             self.spinner.stopAnimating()
             let alert = UIAlertController(title: "Success", message: "Temperature Updated", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil
@@ -81,66 +117,48 @@ class UpdateViewController: UIViewController {
         }
     }
     
-    private lazy var lastUpdatedTemperatureLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 36, weight: UIFont.Weight.bold)
-        label.textColor = .black
-        return label
-    }()
-    private lazy var lastUpdatedTemperatureDateLabel: UILabel = {
-           let label = UILabel()
-           label.font = UIFont.systemFont(ofSize: 20, weight: UIFont.Weight.bold)
-           label.textColor = .black
-           return label
-       }()
-    
-    private lazy var temperatureTextField: UITextField = {
-        let textField = UITextField()
-        textField.borderStyle = .roundedRect
-        textField.placeholder = "Temperature"
-        textField.keyboardType = .numberPad
-        return textField
-    }()
-    
-    func fetchUserTemperatureDate(uid: String) {
-        Database.database().reference().child(Constants.userHealth).child(uid).child(Constants.userTemperature).observeSingleEvent(of: .value, with: { (snapshot) in
-            self.lastUpdatedTemperatureLabel.text = snapshot.value(forKey: "temperature") as? String
-            self.lastUpdatedTemperatureDateLabel.text = snapshot.value(forKey: "modifiedDate") as? String
-          }) { (error) in
-            print("Error Occurred: \(error.localizedDescription)")
-        }
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        setupUserInterface()
+        fetchUserTemperatureDate(uid: uid!)
+    }
+    
+    func setupUserInterface() {
+        view.backgroundColor = UIColor(red: 244/255, green: 244/255, blue: 244/255, alpha: 1)
         
-        navigationController?.navigationBar.isHidden = true
+        view.addSubview(createNewsItemButton)
+        createNewsItemButton.setViewConstraints(top: view.safeAreaLayoutGuide.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor , right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 10, marginBottom: 10, marginLeft: 10, marginRight: 10, height: 75)
         
         
-        let stackView = UIStackView(arrangedSubviews: [createNewsItemButton, surveyButton, lastUpdatedTemperatureLabel, temperatureTextField, updateTemperatureButton])
-        stackView.axis = .vertical
-        stackView.distribution = .fillProportionally
-        stackView.spacing = 20
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(stackView)
-        stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
-        //        stackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0).isActive = true
-        stackView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: 0).isActive = true
-        stackView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 0).isActive = true
+        view.addSubview(surveyButton)
+        surveyButton.setViewConstraints(top: createNewsItemButton.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor , right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 10, marginBottom: 10, marginLeft: 10, marginRight: 10, height: 75)
+        
+        
+        view.addSubview(surveyButton)
+        
+        view.addSubview(lastUpdatedTemperatureLabel)
+        view.addSubview(lastUpdatedTemperatureDateLabel)
+        view.addSubview(temperatureTextField)
+        view.addSubview(updateTemperatureButton)
+        
+        lastUpdatedTemperatureLabel.setViewConstraints(top: surveyButton.bottomAnchor, marginTop: 20, marginBottom: 10, marginLeft: 10, marginRight: 10)
+        lastUpdatedTemperatureLabel.centerX(view: view)
+        
+        lastUpdatedTemperatureDateLabel.setViewConstraints(top: lastUpdatedTemperatureLabel.bottomAnchor, marginTop: 20, marginBottom: 10, marginLeft: 10, marginRight: 10)
+        lastUpdatedTemperatureDateLabel.centerX(view: view)
+        
+        temperatureTextField.setViewConstraints(top: lastUpdatedTemperatureDateLabel.bottomAnchor, marginTop: 10, marginBottom: 5)
+        temperatureTextField.centerX(view: view)
+        
+        updateTemperatureButton.setViewConstraints(top: temperatureTextField.bottomAnchor, marginTop: 10, width: view.frame.size.width / 3, height: 40)
+        updateTemperatureButton.centerX(view: view)
         
         spinner.translatesAutoresizingMaskIntoConstraints = false
         spinner.color = .black
         view.addSubview(spinner)
         spinner.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         spinner.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-        //        view.addSubview(label)
-        //        label.translatesAutoresizingMaskIntoConstraints = false
-        //        label.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor, constant: 0).isActive = true
-        //        label.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor, constant: 0).isActive = true
-        // Do any additional setup after loading the view.
     }
-    
     
     /*
      // MARK: - Navigation

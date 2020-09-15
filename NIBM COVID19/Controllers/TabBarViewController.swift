@@ -34,7 +34,6 @@ class TabBarViewController: UITabBarController {
         let homeVC = HomeViewController()
         
         let UpdateVC = UpdateViewController()
-        UpdateVC.view.backgroundColor = UIColor.blue
         
         let settingsVC = SettingsViewController()
         settingsVC.view.backgroundColor = UIColor.cyan
