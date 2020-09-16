@@ -26,7 +26,9 @@ class NotificationViewController: UIViewController {
             let comment: String = value as! String
             self.newsUpdates.append(comment)
             self.newsUpdatesTableView.insertRows(at: [IndexPath(row: self.newsUpdates.count-1, section: 0)], with: UITableView.RowAnimation.automatic)
-        })
+        }) { (error) in
+            print("Error Occurred: \(error)")
+        }
     }
     
     override func viewDidLoad() {

@@ -48,19 +48,25 @@ class HomeViewController: UIViewController {
         return button
     }()
     
-//    private let statusLabel: UILabel = {
-//        let label = UILabel()
-//        label.text = "No risk of infection in this area"
-//        label.textAlignment = .center
-//        return label
-//    }()
+    let notInfectedSummaryView = UIView().summaryView(imageName: Constants.greenUserImage, count: 0, type: "Not Infected")
     
-//    private let statusView: UIView = {
-//        let view = UIView()
-//        view.backgroundColor = .orange
-//        view.layer.cornerRadius = 5
-//        return view
-//    }()
+    let highRiskSummaryView = UIView().summaryView(imageName: Constants.redUserImage, count: 0, type: "High Risk")
+    
+    let lowRiskSummaryView = UIView().summaryView(imageName: Constants.yellowUserImage, count: 0, type: "Low Risk")
+    
+    //    private let statusLabel: UILabel = {
+    //        let label = UILabel()
+    //        label.text = "No risk of infection in this area"
+    //        label.textAlignment = .center
+    //        return label
+    //    }()
+    
+    //    private let statusView: UIView = {
+    //        let view = UIView()
+    //        view.backgroundColor = .orange
+    //        view.layer.cornerRadius = 5
+    //        return view
+    //    }()
     
     //    private lazy var signOutButton: UIButton = {
     //        let button = UIButton()
@@ -71,6 +77,13 @@ class HomeViewController: UIViewController {
     //        button.addTarget(self, action: #selector(handleSignOut), for: .touchUpInside)
     //        return button
     //    }()
+    let newsUpdateMessageLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Some news about the COVID 19 Pandemic. This is an opportunity to get together and help each other rather than fight like some shitheads. La la lalalalalalalala hurhaurjwsejiasufioudasjfiosdfiosdfniodsfndsoifndsoifnsdfijndsfjkdsnfjkdsnfjkdsnfdjknSome news about the COVID 19 Pandemic. This is an opportunity to get together and help each other rather than fight like some shitheads. La la lalalalalalalala hurhaurjwsejiasufioudasjfiosdfiosdfniodsfndsoifndsoifnsdfijndsfjkdsnfjkdsnfjkdsnfdjkn"
+        label.font = label.font.withSize(14)
+        label.numberOfLines = 0
+        return label
+    }()
     
     private lazy var notificationView: UIView = {
         let view = UIView()
@@ -124,21 +137,99 @@ class HomeViewController: UIViewController {
         return button
     }()
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setupUserInterface()
-    }
-    
     @objc func viewMap() {
         let mapViewController = MapViewController()
         navigationController?.pushViewController(mapViewController, animated: true)
     }
     
+    func getStats() {
+        var low = 0
+        var medium = 0
+        var high = 0
+        var riskLevel = ""
+        
+        let notInfected: UILabel = notInfectedSummaryView.subviews[1] as! UILabel
+        let highRisk: UILabel = highRiskSummaryView.subviews[1] as! UILabel
+        let lowRisk: UILabel = lowRiskSummaryView.subviews[1] as! UILabel
+        
+        Database.database().reference().child(Constants.userHealth).child(Constants.surveySummary).observe(.value) { snapshot in
+            low = 0
+            medium = 0
+            high = 0
+            for child in snapshot.children{
+                
+                let value:DataSnapshot = child as! DataSnapshot
+                riskLevel = value.childSnapshot(forPath: "riskLevel").value as! String
+                
+                switch riskLevel {
+                case "Very High":
+                    high+=1
+                case "High":
+                    high+=1
+                case "Medium":
+                    medium+=1
+                case "Low":
+                    medium+=1
+                case "Very Low":
+                    medium+=1
+                case "None":
+                    low+=1
+                default: break
+                }
+                
+            }
+            notInfected.text = String(low)
+            highRisk.text = String(high)
+            lowRisk.text = String(medium)
+        }
+        
+        //        Database.database().reference().child(Constants.userHealth).child(Constants.surveySummary).observe(.childAdded, with: { (snapshot) -> Void in
+        //            let value = snapshot.childSnapshot(forPath: "riskLevel").value
+        //            riskLevel = value as? String ?? ""
+        //
+        //            switch riskLevel {
+        //            case "Very High":
+        //                high+=1
+        //            case "High":
+        //                high+=1
+        //            case "Medium":
+        //                medium+=1
+        //            case "Low":
+        //                medium+=1
+        //            case "Very Low":
+        //                medium+=1
+        //            case "None":
+        //                low+=1
+        //            default: break
+        //            }
+        //            notInfected.text = String(low)
+        //            highRisk.text = String(high)
+        //            lowRisk.text = String(medium)
+        //        })
+        var news = ""
+        Database.database().reference().child(Constants.newsUpdates).queryOrderedByKey().queryLimited(toLast: 3).observe(.value, with: { (snapshot) -> Void in
+            for child in snapshot.children{
+                
+                let value:DataSnapshot = child as! DataSnapshot
+                let newsVal = "\(value.childSnapshot(forPath: "news").value as! String) \n\n"
+                news.append(contentsOf: newsVal)
+                print(value.childSnapshot(forPath: "news").value as! String)
+            }
+            self.newsUpdateMessageLabel.text = news
+        })
+        
+    }
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupUserInterface()
+        getStats()
+    }
+    
+    
     func setupUserInterface() {
         
         //                navigationController?.navigationBar.isHidden = true
         view.backgroundColor = UIColor(red: 244/255, green: 244/255, blue: 244/255, alpha: 1)
-        
         
         let safetyActionView: UIView = {
             let view = UIView()
@@ -159,11 +250,7 @@ class HomeViewController: UIViewController {
         stayHomelabel.setViewConstraints(top: safetyActionView.topAnchor, left: safetyActionView.leftAnchor, right: safetyActionView.rightAnchor, marginTop: 30, marginBottom: 5, marginLeft: 5, marginRight: 5)
         safeActionsButton.setViewConstraints(top: stayHomelabel.bottomAnchor, left: safetyActionView.leftAnchor, right: safetyActionView.rightAnchor, marginTop: 5, marginBottom: 5, marginLeft: 5, marginRight: 5)
         
-        let notInfectedSummaryView = UIView().summaryView(imageName: Constants.greenUserImage, count: 10, type: "Not Infected")
         
-        let highRiskSummaryView = UIView().summaryView(imageName: Constants.redUserImage, count: 0, type: "High Risk")
-        
-        let lowRiskSummaryView = UIView().summaryView(imageName: Constants.yellowUserImage, count: 1, type: "Low Risk")
         
         let summaryView: UIView = {
             let view = UIView()
@@ -183,7 +270,7 @@ class HomeViewController: UIViewController {
         let summaryDataStackView = UIStackView(arrangedSubviews: [notInfectedSummaryView, highRiskSummaryView, lowRiskSummaryView])
         summaryDataStackView.axis = .horizontal
         summaryDataStackView.distribution = .fillEqually
-
+        
         summaryView.addSubview(summaryDataStackView)
         
         summaryDataStackView.setViewConstraints(top:seeMoreButton.bottomAnchor ,bottom: summaryView.bottomAnchor, left: summaryView.leftAnchor, right: summaryView.rightAnchor, marginTop: 20, marginBottom: 5, marginLeft: 5, marginRight: 5)
@@ -197,18 +284,12 @@ class HomeViewController: UIViewController {
             return view
         }()
         
-//        let separatorView = UIView()
-//        separatorView.backgroundColor = .lightGray
-//        view.addSubview(separatorView)
-//        separatorView.setViewConstraints(bottom: newsUpdatesView.bottomAnchor, left: newsUpdatesView.leftAnchor, right: newsUpdatesView.rightAnchor, marginLeft: 8, height: 0.75)
+        //        let separatorView = UIView()
+        //        separatorView.backgroundColor = .lightGray
+        //        view.addSubview(separatorView)
+        //        separatorView.setViewConstraints(bottom: newsUpdatesView.bottomAnchor, left: newsUpdatesView.leftAnchor, right: newsUpdatesView.rightAnchor, marginLeft: 8, height: 0.75)
         
-        let newsUpdateMessageLabel: UILabel = {
-            let label = UILabel()
-            label.text = "Some news about the COVID 19 Pandemic. This is an opportunity to get together and help each other rather than fight like some shitheads. La la lalalalalalalala hurhaurjwsejiasufioudasjfiosdfiosdfniodsfndsoifndsoifnsdfijndsfjkdsnfjkdsnfjkdsnfdjknSome news about the COVID 19 Pandemic. This is an opportunity to get together and help each other rather than fight like some shitheads. La la lalalalalalalala hurhaurjwsejiasufioudasjfiosdfiosdfniodsfndsoifndsoifnsdfijndsfjkdsnfjkdsnfjkdsnfdjkn"
-            label.font = label.font.withSize(14)
-            label.numberOfLines = 0
-            return label
-        }()
+        
         
         view.addSubview(newsUpdatesView)
         newsUpdatesView.setViewConstraints(top: safetyActionView.bottomAnchor, bottom: summaryView.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 10, marginBottom: 10, marginLeft: 10, marginRight: 10)

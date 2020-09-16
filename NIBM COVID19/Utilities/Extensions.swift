@@ -91,7 +91,7 @@ extension UIView {
     
     func summaryView(imageName: String, count: Int, type: String) -> UIView {
         
-        let view = UIView()
+        let view:UIView = UIView()
         
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 10
@@ -121,6 +121,7 @@ extension UIView {
         
         return view
     }
+    
     
 }
 

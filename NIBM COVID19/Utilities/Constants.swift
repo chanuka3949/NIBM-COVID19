@@ -18,4 +18,5 @@ struct Constants {
     static let greenUserImage = "GreenUserImage"
     static let yellowUserImage = "YellowUserImage"
     static let redUserImage = "RedUserImage"
+    static let surveySummary = "survey-summary"
 }

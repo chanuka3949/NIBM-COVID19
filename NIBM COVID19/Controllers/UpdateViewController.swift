@@ -67,9 +67,9 @@ class UpdateViewController: UIViewController {
         textField.keyboardType = .numberPad
         return textField
     }()
-    
+
     func fetchUserTemperatureDate(uid: String) {
-        Database.database().reference().child(Constants.userHealth).child(uid).child(Constants.userTemperature).observe(.value, with: { (snapshot) in
+        Database.database().reference().child(Constants.userHealth).child(Constants.userTemperature).child(uid).observe(.value, with: { (snapshot) in
             let value = snapshot.value as? NSDictionary
             
             self.lastUpdatedTemperatureLabel.text = value?["temperature"] as? String

@@ -316,45 +316,52 @@ class SurveyViewController: UIViewController {
                           "questioFive": result.question5,
                           "riskLevel": user.riskLevel!,
                           "modifiedDate": result.modifiedDate?.timeIntervalSince1970 as Any] as [String : Any]
-            Database.database().reference().child(Constants.userHealth).child(uid!).child(Constants.surveyResults).updateChildValues(values) { (error, ref) in
+            Database.database().reference().child(Constants.userHealth).child(Constants.surveyResults).child(uid!).updateChildValues(values) { (error, ref) in
                 if error != nil {
                     let alert = UIAlertController(title: "An error occurred", message: "Couldn't save survey data on database", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
                     self.present(alert, animated: true)
                 }
-                self.spinner.stopAnimating()
-                let alert = UIAlertController(title: "Success", message: "Survey results saved successfully", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: {(alert: UIAlertAction!) in self.navigationController?.popViewController(animated: true)}
+                Database.database().reference().child(Constants.userHealth).child(Constants.surveySummary).child(self.uid!).updateChildValues(["riskLevel":self.user.riskLevel!]) { (error, ref) in
+                    if error != nil {
+                        let alert = UIAlertController(title: "An error occurred", message: "Couldn't save survey summary on database", preferredStyle: .alert)
+                        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                        self.present(alert, animated: true)
+                    }
+                    self.spinner.stopAnimating()
+                    let alert = UIAlertController(title: "Success", message: "Survey results saved successfully", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {(alert: UIAlertAction!) in self.navigationController?.popViewController(animated: true)}
                     ))
-                self.present(alert, animated: true)
+                    self.present(alert, animated: true)
+                }
             }
         } catch {
             spinner.stopAnimating()
             let alert = UIAlertController(title: "An error occurred", message: "Couldn't save survey data on database", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
             self.present(alert, animated: true)
             navigationController?.popViewController(animated: true)
         }
     }
-        func fetchLastReading(uid: String) -> Int16 {
-            let filterPredicate = NSPredicate(format: "uid == %@"
-                , uid)
-            var riskLevel: Int16 = 0
-            let sortDescriptor = NSSortDescriptor(key: "modifiedDate", ascending: false)
-            let request: NSFetchRequest<SurveyResult> = SurveyResult.fetchRequest()
-            request.predicate = filterPredicate
-            request.sortDescriptors = [sortDescriptor]
-            request.fetchLimit = 1
-            do {
-                resultList = try context.fetch(request)
-                if resultList.count != 0 {
-                    riskLevel = resultList[0].riskLevel
-                }
-            } catch {
-                print("DEBUG: Error fecthing data from context \(error)")
+    func fetchLastReading(uid: String) -> Int16 {
+        let filterPredicate = NSPredicate(format: "uid == %@"
+            , uid)
+        var riskLevel: Int16 = 0
+        let sortDescriptor = NSSortDescriptor(key: "modifiedDate", ascending: false)
+        let request: NSFetchRequest<SurveyResult> = SurveyResult.fetchRequest()
+        request.predicate = filterPredicate
+        request.sortDescriptors = [sortDescriptor]
+        request.fetchLimit = 1
+        do {
+            resultList = try context.fetch(request)
+            if resultList.count != 0 {
+                riskLevel = resultList[0].riskLevel
             }
-            return riskLevel
+        } catch {
+            print("DEBUG: Error fecthing data from context \(error)")
         }
+        return riskLevel
+    }
     func calculateNewRiskLevel(newRiskLevel: Int16) -> String {
         switch newRiskLevel {
         case 5:
