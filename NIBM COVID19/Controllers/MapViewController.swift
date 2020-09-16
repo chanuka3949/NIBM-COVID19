@@ -8,9 +8,9 @@
 
 import UIKit
 import MapKit
+import Firebase
 
 class MapViewController: UIViewController {
-    
     private lazy var mapView = MKMapView()
     private var locationManager = LocationHandler.sharedInstance.locationManager
     override func viewDidLoad() {
@@ -21,7 +21,6 @@ class MapViewController: UIViewController {
     }
     
     func setupUserLocation() {
-
         mapView.delegate = self
         view.addSubview(mapView)
         mapView.frame = view.frame
@@ -32,36 +31,58 @@ class MapViewController: UIViewController {
         mapView.setRegion(region, animated: true)
     }
     
+    func getUserRiskLevels(uid: String, completion: @escaping(String) -> Void) {
+        var riskLevel = ""
+        Database.database().reference().child(Constants.userHealth).child(Constants.surveySummary).child(uid).observe(.childAdded, with: { (snapshot) -> Void in
+            
+            riskLevel = snapshot.value as! String
+            completion(riskLevel)
+        })
+    }
+    
     func getNearbyUsers() {
         guard let location = locationManager?.location else {return}
         print("Getting nearby users")
         LocationHandler.sharedInstance.getNearbyUserLocations(location: location) { (uid, location) in
-            print("DEBUG: \(uid)")
-            print("DEBUG: \(location)")
-            //get health data to get risk level and change the annotation color accordingly
-            let annotation = UserAnnotation(uid: uid, coordinate: location.coordinate, color: .blue)
-            
-            var userAlreadyVisible: Bool {
-                return self.mapView.annotations.contains { (userAnnotation) -> Bool in
-                    guard let userAnnotation = userAnnotation as? UserAnnotation else {return false}
-                    if userAnnotation.uid == annotation.uid {
-                        print("DEBUG: User already exists in map")
-                        //update user location
-                        userAnnotation.coordinate = annotation.coordinate
-                        return true
-                    }
-                    return false
+            self.getUserRiskLevels(uid: uid, completion: {(riskLevel) in
+                var color: UIColor = .systemBlue
+                switch riskLevel {
+                case "Very High":
+                    color = .red
+                case "High":
+                    color = .red
+                case "Medium":
+                    color = .yellow
+                case "Low":
+                    color = .yellow
+                case "Very Low":
+                    color = .green
+                case "None":
+                    color = .green
+                default: break
                 }
-            }
-            if !userAlreadyVisible {
-                print("DEBUG: User annotation added to map \(annotation.uid)")
-                self.mapView.addAnnotation(annotation)
-            }
+                let annotation = UserAnnotation(uid: uid, coordinate: location.coordinate, color: color)
+                var userAlreadyVisible: Bool {
+                    return self.mapView.annotations.contains { (userAnnotation) -> Bool in
+                        guard let userAnnotation = userAnnotation as? UserAnnotation else {return false}
+                        if userAnnotation.uid == annotation.uid {
+                            print("DEBUG: User already exists in map")
+                            userAnnotation.coordinate = annotation.coordinate
+                            userAnnotation.color = annotation.color
+                            return true
+                        }
+                        return false
+                    }
+                }
+                if !userAlreadyVisible {
+                    print("DEBUG: User annotation added to map \(annotation.uid)")
+                    self.mapView.addAnnotation(annotation)
+                }
+            })
         }
     }
-    
-    
 }
+
 extension MapViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         if let annotation = annotation as? UserAnnotation {

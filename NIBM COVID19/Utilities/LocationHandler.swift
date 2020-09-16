@@ -57,4 +57,19 @@ class LocationHandler: NSObject, CLLocationManagerDelegate {
             )
         }
     }
+    
+    func updateUserLocation(uid: String) {
+        let geofireRef = DatabaseService.databaseReference.child(Constants.userLocations)
+        let geoFire = GeoFire(firebaseRef: geofireRef)
+        
+        guard let location = self.locationManager?.location else { return }
+
+        geoFire.setLocation(location, forKey: uid) { (error) in
+            if (error != nil) {
+                print("An error occured: \(error!)")
+                return
+            }
+            print("User Location Updated")
+        }
+    }
 }
