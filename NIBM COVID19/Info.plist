@@ -64,6 +64,8 @@
 	<string>We are using your location to get notify you on any high risk people in your surrounding area</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>We are using your location to alert you on any threats on your surroundings</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Authorization required to change personal data</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Need access to get information of your picture from photo library</string>
 	<key>NSCameraUsageDescription</key>

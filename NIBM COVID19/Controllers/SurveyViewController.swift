@@ -29,7 +29,6 @@ class SurveyViewController: UIViewController {
         button.layer.borderWidth = 1
         button.layer.cornerRadius = 5
         button.layer.borderColor = UIColor.lightGray.cgColor
-        button.heightAnchor.constraint(equalToConstant: 40).isActive = true
         button.addTarget(self, action: #selector(yesButtonClicked), for: .touchUpInside)
         return button
     }()
@@ -43,7 +42,6 @@ class SurveyViewController: UIViewController {
         button.layer.borderWidth = 1
         button.layer.cornerRadius = 5
         button.layer.borderColor = UIColor.lightGray.cgColor
-        button.heightAnchor.constraint(equalToConstant: 40).isActive = true
         button.addTarget(self, action: #selector(noButtonClicked), for: .touchUpInside)
         return button
     }()
@@ -70,7 +68,7 @@ class SurveyViewController: UIViewController {
     private lazy var q1BodyLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
-        label.text = "\t\tFever\n\t\tCough\n\t\tShortness of breath\n\t\tSore throat\n\t\tHeadache"
+        label.text = "\t\tCough\n\t\tSHORTNESS OF BREATH\n\t\tSORE THROAT\n\t\tHEADACHE"
         label.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.medium)
         label.textColor = .black
         return label
@@ -87,7 +85,7 @@ class SurveyViewController: UIViewController {
     private lazy var q1StackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [q1TitleLabel, q1BodyLabel, q1Label, buttonStackView])
         stackView.axis = .vertical
-        stackView.distribution = .fillProportionally
+        stackView.distribution = .equalSpacing
         stackView.spacing = 20
         return stackView
     }()
@@ -105,7 +103,7 @@ class SurveyViewController: UIViewController {
     private lazy var q2BodyLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
-        label.text = "\t\tAvoid contact with\n\t\tsick people"
+        label.text = "\t\tAVOID CONTACT WITH\n\t\tSICK PEOPLE"
         label.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.medium)
         label.textColor = .black
         return label
@@ -122,7 +120,7 @@ class SurveyViewController: UIViewController {
     private lazy var q2StackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [q2TitleLabel, q2BodyLabel, q2Label, buttonStackView])
         stackView.axis = .vertical
-        stackView.distribution = .fillProportionally
+        stackView.distribution = .equalSpacing
         stackView.spacing = 20
         return stackView
     }()
@@ -157,7 +155,7 @@ class SurveyViewController: UIViewController {
     private lazy var q3StackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [q3TitleLabel, q3BodyLabel, q3Label, buttonStackView])
         stackView.axis = .vertical
-        stackView.distribution = .fillProportionally
+        stackView.distribution = .equalSpacing
         stackView.spacing = 20
         return stackView
     }()
@@ -175,7 +173,7 @@ class SurveyViewController: UIViewController {
     private lazy var q4BodyLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
-        label.text = "\t\tFever\n\t\tContinuous Cough\n\t\tLoss or change of smell and taste"
+        label.text = "\t\tCONTINUOUS COUGH\n\t\tLOSS OR CHANGE OF SMELL AND TASTE"
         label.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.medium)
         label.textColor = .black
         return label
@@ -192,7 +190,7 @@ class SurveyViewController: UIViewController {
     private lazy var q4StackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [q4TitleLabel, q4BodyLabel, q4Label, buttonStackView])
         stackView.axis = .vertical
-        stackView.distribution = .fillProportionally
+        stackView.distribution = .equalSpacing
         stackView.spacing = 20
         return stackView
     }()
@@ -210,14 +208,13 @@ class SurveyViewController: UIViewController {
     private lazy var q5BodyLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
-        label.text = "\t\tFever\n\t\tContinuous Cough\n\t\tLoss or change of smell and taste"
         label.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.medium)
         label.textColor = .black
         return label
     }()
     private lazy var q5Label: UILabel = {
         let label = UILabel()
-        label.text = "Are you having any of the above symptoms?"
+        label.text = "Have you had a fever during the past couple of days?"
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.bold)
         label.textColor = .black
@@ -227,7 +224,7 @@ class SurveyViewController: UIViewController {
     private lazy var q5StackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [q5TitleLabel, q5BodyLabel, q5Label, buttonStackView])
         stackView.axis = .vertical
-        stackView.distribution = .fillProportionally
+        stackView.distribution = .equalSpacing
         stackView.spacing = 20
         return stackView
     }()
@@ -374,74 +371,29 @@ class SurveyViewController: UIViewController {
     func presentQuestion(questionNo: Int) {
         switch questionNo {
         case 1:
-            q1StackView.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(q1StackView)
             
-            q1StackView.translatesAutoresizingMaskIntoConstraints = false
-            
-            q1StackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,
-                                             constant: 20).isActive = true
-            q1StackView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor,
-                                               constant: -20).isActive = true
-            q1StackView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor,
-                                              constant: 20).isActive = true
-            q1StackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20).isActive = true
+            q1StackView.setViewConstraints(top: view.safeAreaLayoutGuide.topAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 20, marginBottom: 20, marginLeft: 20, marginRight: 20)
         case 2:
             q1StackView.removeFromSuperview()
-            q2StackView.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(q2StackView)
             
-            q2StackView.translatesAutoresizingMaskIntoConstraints = false
-            
-            q2StackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,
-                                             constant: 20).isActive = true
-            q2StackView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor,
-                                               constant: -20).isActive = true
-            q2StackView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor,
-                                              constant: 20).isActive = true
-            q2StackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20).isActive = true
+            q2StackView.setViewConstraints(top: view.safeAreaLayoutGuide.topAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 20, marginBottom: 20, marginLeft: 20, marginRight: 20)
         case 3:
             q2StackView.removeFromSuperview()
-            q3StackView.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(q3StackView)
             
-            q3StackView.translatesAutoresizingMaskIntoConstraints = false
-            
-            q3StackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,
-                                             constant: 20).isActive = true
-            q3StackView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor,
-                                               constant: -20).isActive = true
-            q3StackView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor,
-                                              constant: 20).isActive = true
-            q3StackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20).isActive = true
+            q3StackView.setViewConstraints(top: view.safeAreaLayoutGuide.topAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 20, marginBottom: 20, marginLeft: 20, marginRight: 20)
         case 4:
             q3StackView.removeFromSuperview()
-            q4StackView.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(q4StackView)
             
-            q4StackView.translatesAutoresizingMaskIntoConstraints = false
-            
-            q4StackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,
-                                             constant: 20).isActive = true
-            q4StackView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor,
-                                               constant: -20).isActive = true
-            q4StackView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor,
-                                              constant: 20).isActive = true
-            q4StackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20).isActive = true
+            q4StackView.setViewConstraints(top: view.safeAreaLayoutGuide.topAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 20, marginBottom: 20, marginLeft: 20, marginRight: 20)
         case 5:
             q4StackView.removeFromSuperview()
-            q5StackView.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(q5StackView)
             
-            q5StackView.translatesAutoresizingMaskIntoConstraints = false
-            
-            q5StackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,
-                                             constant: 20).isActive = true
-            q5StackView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor,
-                                               constant: -20).isActive = true
-            q5StackView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor,
-                                              constant: 20).isActive = true
-            q5StackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20).isActive = true
+            q5StackView.setViewConstraints(top: view.safeAreaLayoutGuide.topAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 20, marginBottom: 20, marginLeft: 20, marginRight: 20)
         default:
             return
         }
@@ -459,18 +411,8 @@ class SurveyViewController: UIViewController {
         spinner.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         spinner.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         
-        buttonStackView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(buttonStackView)
-        
-        buttonStackView.translatesAutoresizingMaskIntoConstraints = false
-        
-        buttonStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,
-                                             constant: 10).isActive = true
-        buttonStackView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor,
-                                               constant: -10).isActive = true
-        buttonStackView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor,
-                                              constant: 10).isActive = true
-        buttonStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10).isActive = true
+        buttonStackView.setViewConstraints(bottom: view.safeAreaLayoutGuide.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 10, marginBottom: 10, marginLeft: 10, marginRight: 10, height: 40)
     }
     
     /*

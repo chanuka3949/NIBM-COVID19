@@ -9,12 +9,14 @@
 import UIKit
 import Firebase
 import CoreData
+import LocalAuthentication
 
 class UpdateViewController: UIViewController {
     
     private let uid = Auth.auth().currentUser?.uid
     private let spinner = UIActivityIndicatorView(style: .large)
-    
+    private let authContext = LAContext()
+    private var error: NSError?
     private let context = (UIApplication.shared.delegate as? AppDelegate)!.persistentContainer.viewContext
     private var resultList = [User]()
     private var user = User(context: (UIApplication.shared.delegate as? AppDelegate)!.persistentContainer.viewContext)
@@ -94,8 +96,24 @@ class UpdateViewController: UIViewController {
     }
     
     @objc func takeSurvey() {
-        let surveyViewController = SurveyViewController()
-        navigationController?.pushViewController(surveyViewController, animated: true)
+        
+        if authContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+            let reason = "You are trying to change personal data"
+            authContext.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) {
+                [weak self] success, authenticationError in
+                
+                DispatchQueue.main.async {
+                    if success {
+                        let surveyViewController = SurveyViewController()
+                        self?.navigationController?.pushViewController(surveyViewController, animated: true)
+                    }
+                }
+            }
+        } else {
+            let ac = UIAlertController(title: "Face ID Unavailable", message: "Your device is not configured for Apple Face ID", preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "OK", style: .default))
+            self.present(ac, animated: true)
+        }
     }
     
     @objc func createNewsItem() {
