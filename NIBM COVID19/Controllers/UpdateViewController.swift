@@ -8,11 +8,16 @@
 
 import UIKit
 import Firebase
+import CoreData
 
 class UpdateViewController: UIViewController {
     
     private let uid = Auth.auth().currentUser?.uid
     private let spinner = UIActivityIndicatorView(style: .large)
+    
+    private let context = (UIApplication.shared.delegate as? AppDelegate)!.persistentContainer.viewContext
+    private var resultList = [User]()
+    private var user = User(context: (UIApplication.shared.delegate as? AppDelegate)!.persistentContainer.viewContext)
     
     private lazy var updateTemperatureButton: UIButton = {
         let button = UIButton()
@@ -63,24 +68,24 @@ class UpdateViewController: UIViewController {
     private lazy var temperatureTextField: UITextField = {
         let textField = UITextField()
         textField.borderStyle = .roundedRect
-        textField.placeholder = "Temperature"
+        textField.placeholder = "Temperature °C"
         textField.keyboardType = .numberPad
         return textField
     }()
-
+    
     func fetchUserTemperatureDate(uid: String) {
         Database.database().reference().child(Constants.userHealth).child(uid).child(Constants.userTemperature).observe(.value, with: { (snapshot) in
             let value = snapshot.value as? NSDictionary
+            if value?["temperature"] != nil {
+                self.lastUpdatedTemperatureLabel.text = String(format: "%.1f", value?["temperature"] as! Float)
+                self.lastUpdatedTemperatureLabel.text?.append(contentsOf: " °C")
+                self.lastUpdatedTemperatureDateLabel.text = value?["modifiedDate"] as? String
+            }
             
-            self.lastUpdatedTemperatureLabel.text = value?["temperature"] as? String
-            self.lastUpdatedTemperatureDateLabel.text = value?["modifiedDate"] as? String
-            
-            self.lastUpdatedTemperatureLabel.text?.append(contentsOf: " °C")
-            
-            if self.lastUpdatedTemperatureLabel.text == nil {
+            if self.lastUpdatedTemperatureLabel.text == nil || self.lastUpdatedTemperatureLabel.text == "Checking..." {
                 self.lastUpdatedTemperatureLabel.text = "Not Updated"
             }
-            if self.lastUpdatedTemperatureDateLabel.text == nil {
+            if self.lastUpdatedTemperatureDateLabel.text == nil || self.lastUpdatedTemperatureDateLabel.text == "Last Updated..." {
                 self.lastUpdatedTemperatureDateLabel.text = "Last Update: Never"
             }
         }) { (error) in
@@ -102,20 +107,40 @@ class UpdateViewController: UIViewController {
         if (temperatureTextField.text?.trimmingCharacters(in: [" "]).isEmpty)! {
             return
         }
-        print("Hit")
-        spinner.startAnimating()
-        let values = ["temperature": temperatureTextField.text!.trimmingCharacters(in: [" "]), "modifiedDate": Date().timeIntervalSince1970] as [String : Any]
-        Database.database().reference().child(Constants.userHealth).child(uid!).child(Constants.userTemperature).updateChildValues(values) { (error, ref) in
-            if error != nil {
-                let alert = UIAlertController(title: "An error occurred", message: "Couldn't save temperature on database", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-                self.present(alert, animated: true)
+        let tempValue: String = (temperatureTextField.text?.trimmingCharacters(in: [" "]))!
+        guard let temp = Float(tempValue) else { return }
+        let riskLevel = calculateRiskLevelByTemp(uid: uid!, temperature: temp)
+        user.uid = uid
+        user.riskLevel = riskLevel
+        user.modifiedDate = Date()
+        do {
+            spinner.startAnimating()
+            try context.save()
+            let values = ["temperature": temp, "modifiedDate": Date().timeIntervalSince1970] as [String : Any]
+            Database.database().reference().child(Constants.userHealth).child(uid!).child(Constants.userTemperature).updateChildValues(values) { (error, ref) in
+                if error != nil {
+                    let alert = UIAlertController(title: "An error occurred", message: "Couldn't save temperature on database", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                    self.present(alert, animated: true)
+                }
+                Database.database().reference().child(Constants.userHealth).child(Constants.surveySummary).child(self.uid!).updateChildValues(["riskLevel":riskLevel]) { (error, ref) in
+                    if error != nil {
+                        let alert = UIAlertController(title: "An error occurred", message: "Couldn't save survey summary on database", preferredStyle: .alert)
+                        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                        self.present(alert, animated: true)
+                    }
+                    self.temperatureTextField.text = ""
+                    self.spinner.stopAnimating()
+                    let alert = UIAlertController(title: "Success", message: "Temperature Updated", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil
+                    ))
+                    self.present(alert, animated: true)
+                }
             }
-            self.temperatureTextField.text = ""
+        } catch {
             self.spinner.stopAnimating()
-            let alert = UIAlertController(title: "Success", message: "Temperature Updated", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil
-            ))
+            let alert = UIAlertController(title: "An error occurred", message: "Couldn't update temperature", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
             self.present(alert, animated: true)
         }
     }
@@ -124,6 +149,36 @@ class UpdateViewController: UIViewController {
         super.viewDidLoad()
         setupUserInterface()
         fetchUserTemperatureDate(uid: uid!)
+    }
+    
+    func calculateRiskLevelByTemp(uid: String, temperature: Float) -> Int16 {
+        var riskLevel: Int16 = 0
+        var previousRiskLevel: Int16 = 0
+        
+        if temperature > 38 {
+            riskLevel = 5
+        } else if temperature == 38 {
+            riskLevel = 3
+        } else {
+            riskLevel = 1}
+        
+        let filterPredicate = NSPredicate(format: "uid == %@"
+            , uid)
+        let sortDescriptor = NSSortDescriptor(key: "modifiedDate", ascending: false)
+        let request: NSFetchRequest<User> = User.fetchRequest()
+        request.predicate = filterPredicate
+        request.sortDescriptors = [sortDescriptor]
+        request.fetchLimit = 1
+        do {
+            resultList = try context.fetch(request)
+            if resultList.count != 0 {
+                previousRiskLevel = resultList[0].riskLevel
+            }
+        } catch {
+            print("DEBUG: Error fecthing data from context \(error)")
+        }
+        riskLevel = (riskLevel + previousRiskLevel) / 2
+        return riskLevel
     }
     
     func setupUserInterface() {

@@ -70,7 +70,7 @@ class SurveyViewController: UIViewController {
     private lazy var q1BodyLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
-        label.text = "\t\tFever\n\t\tContinuous Cough\n\t\tLoss or change of smell and taste"
+        label.text = "\t\tFever\n\t\tCough\n\t\tShortness of breath\n\t\tSore throat\n\t\tHeadache"
         label.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.medium)
         label.textColor = .black
         return label
@@ -105,14 +105,14 @@ class SurveyViewController: UIViewController {
     private lazy var q2BodyLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
-        label.text = "\t\tFever\n\t\tContinuous Cough\n\t\tLoss or change of smell and taste"
+        label.text = "\t\tAvoid contact with\n\t\tsick people"
         label.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.medium)
         label.textColor = .black
         return label
     }()
     private lazy var q2Label: UILabel = {
         let label = UILabel()
-        label.text = "Are you having any of the above symptoms?"
+        label.text = "Have you been in contact with sick people?"
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.bold)
         label.textColor = .black
@@ -140,14 +140,14 @@ class SurveyViewController: UIViewController {
     private lazy var q3BodyLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
-        label.text = "\t\tFever\n\t\tContinuous Cough\n\t\tLoss or change of smell and taste"
+        label.text = "\t\tAVOID CROWDED\n\t\tPLACES"
         label.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.medium)
         label.textColor = .black
         return label
     }()
     private lazy var q3Label: UILabel = {
         let label = UILabel()
-        label.text = "Are you having any of the above symptoms?"
+        label.text = "Have you been exposed to crowded places?"
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.bold)
         label.textColor = .black
@@ -302,7 +302,8 @@ class SurveyViewController: UIViewController {
         riskLevel += result.question5 ? 1 : 0
         result.riskLevel = Int16(riskLevel)
         user.uid = uid
-        user.riskLevel = calculateNewRiskLevel(newRiskLevel: Int16(riskLevel))
+        user.riskLevel = calculateNewRiskLevelBySurvey(newRiskLevel: Int16(riskLevel))
+        user.modifiedDate = Date()
         resultList.append(result)
         
         do {
@@ -314,7 +315,7 @@ class SurveyViewController: UIViewController {
                           "questionThree": result.question3,
                           "questionFour": result.question4,
                           "questioFive": result.question5,
-                          "riskLevel": user.riskLevel!,
+                          "riskLevel": user.riskLevel,
                           "modifiedDate": result.modifiedDate?.timeIntervalSince1970 as Any] as [String : Any]
             Database.database().reference().child(Constants.userHealth).child(Constants.surveyResults).child(uid!).updateChildValues(values) { (error, ref) in
                 if error != nil {
@@ -322,7 +323,7 @@ class SurveyViewController: UIViewController {
                     alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
                     self.present(alert, animated: true)
                 }
-                Database.database().reference().child(Constants.userHealth).child(Constants.surveySummary).child(self.uid!).updateChildValues(["riskLevel":self.user.riskLevel!]) { (error, ref) in
+                Database.database().reference().child(Constants.userHealth).child(Constants.surveySummary).child(self.uid!).updateChildValues(["riskLevel":self.user.riskLevel]) { (error, ref) in
                     if error != nil {
                         let alert = UIAlertController(title: "An error occurred", message: "Couldn't save survey summary on database", preferredStyle: .alert)
                         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
@@ -343,6 +344,7 @@ class SurveyViewController: UIViewController {
             navigationController?.popViewController(animated: true)
         }
     }
+    
     func fetchLastReading(uid: String) -> Int16 {
         let filterPredicate = NSPredicate(format: "uid == %@"
             , uid)
@@ -362,57 +364,12 @@ class SurveyViewController: UIViewController {
         }
         return riskLevel
     }
-    func calculateNewRiskLevel(newRiskLevel: Int16) -> String {
-        switch newRiskLevel {
-        case 5:
-            return "Very High"
-        case 4:
-            return "High"
-        case 3:
-            return "Medium"
-        case 2:
-            return "Low"
-        case 1:
-            return "Very Low"
-        default:
-            return "None"
-        }
-        //        let sortDescriptor = NSSortDescriptor(key: "modifiedDate", ascending: false)
-        //        let request: NSFetchRequest<SurveyResult> = SurveyResult.fetchRequest()
-        //        request.fetchLimit = 1
-        //        request.sortDescriptors = [sortDescriptor]
-        //        do {
-        //            resultList = try context.fetch(request)
-        //        } catch {
-        //            print("DEBUG: Error fecthing data from context \(error)")
-        //        }
-        //        if resultList.count != 0 {
-        //
-        //        }
-        //        print("\(newRiskLevel) - \(result.uid)")
-    }
     
-    //This is to test the data// can be used for other purposes
-    //    func loadSurveyResults() {
-    //        let uid = Auth.auth().currentUser?.uid
-    //        let filterPredicate = NSPredicate(format: "uid == %@"
-    //            , uid!)
-    //        print(Auth.auth().currentUser != nil)
-    //        let sortDescriptor = NSSortDescriptor(key: "modifiedDate", ascending: false)
-    //        let request: NSFetchRequest<SurveyResult> = SurveyResult.fetchRequest()
-    //        request.predicate = filterPredicate
-    //        request.sortDescriptors = [sortDescriptor]
-    //        request.fetchLimit = 1
-    //        do {
-    //            resultList = try context.fetch(request)
-    //        } catch {
-    //            print("DEBUG: Error fecthing data from context \(error)")
-    //        }
-    //        for result in resultList as [SurveyResult]{
-    //            print("\(result.modifiedDate) - \(result.uid) - \(result.riskLevel)")
-    //        }
-    //        print("DEBUG: Count = \(resultList.count)")
-    //    }
+    func calculateNewRiskLevelBySurvey(newRiskLevel: Int16) -> Int16 {
+        let prevRiskLevel = fetchLastReading(uid: uid!)
+        let value = (newRiskLevel + prevRiskLevel) / 2
+        return value
+    }
     
     func presentQuestion(questionNo: Int) {
         switch questionNo {
