@@ -69,11 +69,13 @@ class UpdateViewController: UIViewController {
     }()
 
     func fetchUserTemperatureDate(uid: String) {
-        Database.database().reference().child(Constants.userHealth).child(Constants.userTemperature).child(uid).observe(.value, with: { (snapshot) in
+        Database.database().reference().child(Constants.userHealth).child(uid).child(Constants.userTemperature).observe(.value, with: { (snapshot) in
             let value = snapshot.value as? NSDictionary
             
             self.lastUpdatedTemperatureLabel.text = value?["temperature"] as? String
             self.lastUpdatedTemperatureDateLabel.text = value?["modifiedDate"] as? String
+            
+            self.lastUpdatedTemperatureLabel.text?.append(contentsOf: " °C")
             
             if self.lastUpdatedTemperatureLabel.text == nil {
                 self.lastUpdatedTemperatureLabel.text = "Not Updated"
@@ -97,11 +99,12 @@ class UpdateViewController: UIViewController {
     }
     
     @objc func updateTemperature() {
-        guard temperatureTextField.text != nil else {
+        if (temperatureTextField.text?.trimmingCharacters(in: [" "]).isEmpty)! {
             return
         }
+        print("Hit")
         spinner.startAnimating()
-        let values = ["temperature": temperatureTextField.text!, "modifiedDate": Date().timeIntervalSince1970] as [String : Any]
+        let values = ["temperature": temperatureTextField.text!.trimmingCharacters(in: [" "]), "modifiedDate": Date().timeIntervalSince1970] as [String : Any]
         Database.database().reference().child(Constants.userHealth).child(uid!).child(Constants.userTemperature).updateChildValues(values) { (error, ref) in
             if error != nil {
                 let alert = UIAlertController(title: "An error occurred", message: "Couldn't save temperature on database", preferredStyle: .alert)
