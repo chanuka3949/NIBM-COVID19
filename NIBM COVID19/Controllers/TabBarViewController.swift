@@ -32,11 +32,9 @@ class TabBarViewController: UITabBarController {
     
     func setupUserInterface() {
         let homeVC = HomeViewController()
-        
         let UpdateVC = UpdateViewController()
-        
         let settingsVC = SettingsViewController()
-        settingsVC.view.backgroundColor = UIColor.cyan
+
         
         homeVC.tabBarItem = UITabBarItem(tabBarSystemItem: .featured, tag: 0)
         UpdateVC.tabBarItem = UITabBarItem(tabBarSystemItem: .mostRecent, tag: 1)

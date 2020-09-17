@@ -16,17 +16,55 @@ class SettingsViewController: UIViewController {
         return label
     }()
     
+    let profileButton: UIButton = {
+       let button = UIButton()
+        button.setTitle("Profile", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.setTitleColor(.systemBlue, for: .highlighted)
+        button.contentHorizontalAlignment = .left
+        button.addTarget(self, action: #selector(goToProfile), for: .touchUpInside)
+        return button
+    }()
+    
+    let contactUsButton: UIButton = {
+       let button = UIButton()
+        button.setTitle("Contact Us", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.setTitleColor(.systemBlue, for: .highlighted)
+        button.contentHorizontalAlignment = .left
+        return button
+    }()
+    
+    let seperatorView: UIView = {
+       let view = UIView()
+        view.backgroundColor = .lightGray
+        view.setViewConstraints(bottom: view.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, height: 1)
+        return view
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationController?.navigationBar.isHidden = true
-        
-        view.addSubview(label)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor, constant: 0).isActive = true
-        label.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor, constant: 0).isActive = true
+        navigationController?.navigationBar.topItem?.title = "Settings"
+        view.backgroundColor = .white
+        setupUserInterface()
         // Do any additional setup after loading the view.
     }
     
+    @objc func goToProfile() {
+        let profileViewController = UserProfileViewController()
+        navigationController?.pushViewController(profileViewController, animated: true)
+    }
+    
+    func setupUserInterface() {
+        view.addSubview(profileButton)
+        profileButton.setViewConstraints(top: view.safeAreaLayoutGuide.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 20, marginLeft: 20, height: 40)
+        
+        view.addSubview(seperatorView)
+        seperatorView.setViewConstraints(top: profileButton.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 10, marginLeft: 20, marginRight: 20)
+        
+        view.addSubview(contactUsButton)
+        contactUsButton.setViewConstraints(top: seperatorView.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 10, marginLeft: 20, height: 40)
+    }
     
     /*
      // MARK: - Navigation

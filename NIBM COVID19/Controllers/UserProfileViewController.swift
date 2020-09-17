@@ -13,9 +13,14 @@ import Firebase
 class UserProfileViewController: UIViewController, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
     
     // MARK: - Properties
+    private lazy var uid = Auth.auth().currentUser?.uid
     
     private lazy var userImageView: UIImageView = {
         let imageView = UIImageView()
+        imageView.clipsToBounds = true
+        imageView.layer.borderWidth = 0.5
+        imageView.layer.borderColor = UIColor.black.cgColor
+        imageView.layer.cornerRadius = 75
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))
         imageView.isUserInteractionEnabled = true
         imageView.addGestureRecognizer(tapGestureRecognizer)
@@ -25,6 +30,7 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
     private lazy var firstNameLabel: UILabel = {
         let label = UILabel()
         label.text = "First Name"
+        label.textColor = .gray
         return label
     }()
     private lazy var firstNameTextField: UITextField = {
@@ -37,6 +43,7 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
     private lazy var lastNameLabel: UILabel = {
         let label = UILabel()
         label.text = "Last Name"
+        label.textColor = .gray
         return label
     }()
     private lazy var lastNameTextField: UITextField = {
@@ -49,13 +56,14 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
     private lazy var addressLabel: UILabel = {
         let label = UILabel()
         label.text = "Address"
+        label.textColor = .gray
         return label
     }()
     private lazy var addressTextView: UITextView = {
         let textView = UITextView()
         textView.layer.borderWidth = 1
         textView.layer.borderColor = UIColor(red: 204.0/255.0, green: 204.0/255.0, blue: 204.0/255.0, alpha: 1).cgColor
-        textView.clipsToBounds = true;
+        textView.font = UIFont.preferredFont(forTextStyle: .body)
         textView.layer.cornerRadius = 5;
         return textView
     }()
@@ -63,6 +71,7 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
     private lazy var userIdLabel: UILabel = {
         let label = UILabel()
         label.text = "User Id"
+        label.textColor = .gray
         return label
     }()
     private lazy var userIDTextField: UITextField = {
@@ -97,24 +106,40 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         Database.database().reference().child("users").child(uid).updateChildValues(values as [AnyHashable : Any]) { (error, ref) in
             print("Successfuly Registerd and profile updated")
         }
-        
+    }
+    
+    func getUserData()  {
+        Database.database().reference().child(Constants.users).child(uid!).observeSingleEvent(of: .value, with: {(snapshot) in
+            let value = snapshot.value as? NSDictionary
+            print(value!)
+            self.firstNameTextField.text = value?["firstName"] as? String
+            self.lastNameTextField.text = value?["lastName"] as? String
+            self.userIDTextField.text = value?["userId"] as? String
+            self.addressTextView.text = value?["address"] as? String
+        })
     }
     
     @objc func imageTapped(tapGestureRecognizer: UITapGestureRecognizer)
     {
-        //        let tappedImage = tapGestureRecognizer.view as! UIImageView
+        let tappedImage = tapGestureRecognizer.view as! UIImageView
         
         let picker = UIImagePickerController()
         picker.sourceType = UIImagePickerController.isSourceTypeAvailable(.camera) ? .camera : .photoLibrary
+        picker.mediaTypes = ["public.image"]
+        picker.allowsEditing = true
         picker.delegate = self
-        present(picker, animated: true)
-        //        PHPhotoLibrary.requestAuthorization { (status) in
-        //            switch status {
-        //            case.authorized:
-        //            case.
-        //            default: break
-        //            }
-        //        }
+        if picker.sourceType == .camera {
+            PHPhotoLibrary.requestAuthorization { (status) in
+                switch status {
+                case.authorized:
+                    self.present(picker, animated: true)
+                default: break
+                }
+            }
+        } else {
+            present(picker, animated: true)
+        }
+        
     }
     
     public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
@@ -126,57 +151,52 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         self.dismiss(animated: true) { [weak self] in
             guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else { return }
             self?.userImageView.image = image
+            let data = image.pngData()
+            
         }
         
+    }
+    
+    func uploadImage()  {
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUserInterface()
+        getUserData()
     }
     
     func configureUserInterface() {
         
         view.backgroundColor = .white
         
-        let userProfileStackView = UIStackView(arrangedSubviews: [firstNameTextField, lastNameTextField, userIDTextField, addressTextView])
-        userProfileStackView.axis = .vertical
-        userProfileStackView.distribution = .fillEqually
-        userProfileStackView.spacing = 15
+        view.addSubview(userImageView)
+        userImageView.setViewConstraints(top: view.safeAreaLayoutGuide.topAnchor, marginTop: 20, marginBottom: 20, marginLeft: 20, marginRight: 20, width: 150, height: 150)
+        userImageView.centerX(view: view)
         
-        view.addSubview(userProfileStackView)
-        userProfileStackView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(firstNameLabel)
+        firstNameLabel.setViewConstraints(top: userImageView.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 10, marginBottom: 10, marginLeft: 20, marginRight: 20)
+        view.addSubview(firstNameTextField)
+        firstNameTextField.setViewConstraints(top: firstNameLabel.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 5, marginBottom: 10, marginLeft: 20, marginRight: 20)
         
-        userProfileStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,
-                                                  constant: 20).isActive = true
-        userProfileStackView.rightAnchor.constraint(equalTo: view.rightAnchor,
-                                                    constant: -20).isActive = true
-        userProfileStackView.leftAnchor.constraint(equalTo: view.leftAnchor,
-                                                   constant: 20).isActive = true
+        view.addSubview(lastNameLabel)
+        lastNameLabel.setViewConstraints(top: firstNameTextField.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 10, marginBottom: 10, marginLeft: 20, marginRight: 20)
+        view.addSubview(lastNameTextField)
+        lastNameTextField.setViewConstraints(top: lastNameLabel.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 5, marginBottom: 10, marginLeft: 20, marginRight: 20)
+        
+        view.addSubview(userIdLabel)
+        userIdLabel.setViewConstraints(top: lastNameTextField.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 10, marginBottom: 10, marginLeft: 20, marginRight: 20)
+        view.addSubview(userIDTextField)
+        userIDTextField.setViewConstraints(top: userIdLabel.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 5, marginBottom: 10, marginLeft: 20, marginRight: 20)
+        
+        view.addSubview(addressLabel)
+        addressLabel.setViewConstraints(top: userIDTextField.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 10, marginBottom: 10, marginLeft: 20, marginRight: 20)
+        view.addSubview(addressTextView)
+        addressTextView.setViewConstraints(top: addressLabel.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 5, marginBottom: 10, marginLeft: 20, marginRight: 20, height: 100)
         
         view.addSubview(updateButton)
-        updateButton.translatesAutoresizingMaskIntoConstraints = false
+        updateButton.setViewConstraints(bottom: view.safeAreaLayoutGuide.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 10, marginBottom: 10, marginLeft: 20, marginRight: 20)
         
-        updateButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,
-                                             constant: -10).isActive = true
-        updateButton.rightAnchor.constraint(equalTo: view.rightAnchor,
-                                            constant: -20).isActive = true
-        updateButton.leftAnchor.constraint(equalTo: view.leftAnchor,
-                                           constant: 20).isActive = true
-        
-        //        updateButton.translatesAutoresizingMaskIntoConstraints = false
-        //        userImageView.translatesAutoresizingMaskIntoConstraints = false
-        //        view.addSubview(updateButton)
-        //        view.addSubview(userImageView)
-        
-        //        userImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
-        //        userImageView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -20).isActive = true
-        //        userImageView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 20).isActive = true
-        //        userImageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
-        //        userImageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        //
-        //        updateButton.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor, constant: 0).isActive = true
-        //        updateButton.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor, constant: 0).isActive = true
     }
     /*
      // MARK: - Navigation

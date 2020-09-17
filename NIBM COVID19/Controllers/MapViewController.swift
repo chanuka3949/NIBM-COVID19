@@ -31,33 +31,32 @@ class MapViewController: UIViewController {
         mapView.setRegion(region, animated: true)
     }
     
-    func getUserRiskLevels(uid: String, completion: @escaping(String) -> Void) {
-        var riskLevel = ""
+    func getUserRiskLevels(uid: String, completion: @escaping(Int) -> Void) {
+        var riskLevel = 0
         Database.database().reference().child(Constants.userHealth).child(Constants.surveySummary).child(uid).observe(.childAdded, with: { (snapshot) -> Void in
             
-            riskLevel = snapshot.value as! String
+            riskLevel = snapshot.value as! Int
             completion(riskLevel)
         })
     }
     
     func getNearbyUsers() {
         guard let location = locationManager?.location else {return}
-        print("Getting nearby users")
         LocationHandler.sharedInstance.getNearbyUserLocations(location: location) { (uid, location) in
             self.getUserRiskLevels(uid: uid, completion: {(riskLevel) in
                 var color: UIColor = .systemBlue
                 switch riskLevel {
-                case "Very High":
+                case 5:
                     color = .red
-                case "High":
+                case 4:
                     color = .red
-                case "Medium":
+                case 3:
                     color = .yellow
-                case "Low":
+                case 2:
                     color = .yellow
-                case "Very Low":
+                case 1:
                     color = .green
-                case "None":
+                case 0:
                     color = .green
                 default: break
                 }

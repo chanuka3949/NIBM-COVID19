@@ -61,7 +61,7 @@ class UpdateViewController: UIViewController {
     
     private lazy var lastUpdatedTemperatureDateLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.light)
+        label.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.light)
         label.textColor = .lightGray
         label.text = "Last Updated..."
         return label
@@ -78,10 +78,16 @@ class UpdateViewController: UIViewController {
     func fetchUserTemperatureDate(uid: String) {
         Database.database().reference().child(Constants.userHealth).child(uid).child(Constants.userTemperature).observe(.value, with: { (snapshot) in
             let value = snapshot.value as? NSDictionary
+            let formattedDate: DateFormatter = {
+                let date = DateFormatter()
+                date.timeStyle = .none
+                date.dateStyle = .short
+                return date
+            }()
             if value?["temperature"] != nil {
                 self.lastUpdatedTemperatureLabel.text = String(format: "%.1f", value?["temperature"] as! Float)
                 self.lastUpdatedTemperatureLabel.text?.append(contentsOf: " °C")
-                self.lastUpdatedTemperatureDateLabel.text = value?["modifiedDate"] as? String
+                self.lastUpdatedTemperatureDateLabel.text = formattedDate.string(from: Date(timeIntervalSince1970: value?["modifiedDate"] as! TimeInterval))
             }
             
             if self.lastUpdatedTemperatureLabel.text == nil || self.lastUpdatedTemperatureLabel.text == "Checking..." {
@@ -200,6 +206,7 @@ class UpdateViewController: UIViewController {
     }
     
     func setupUserInterface() {
+        navigationController?.navigationBar.topItem?.title = "Updates"
         view.backgroundColor = UIColor(red: 244/255, green: 244/255, blue: 244/255, alpha: 1)
         
         view.addSubview(createNewsItemButton)
