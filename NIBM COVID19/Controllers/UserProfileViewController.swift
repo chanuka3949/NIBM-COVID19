@@ -13,7 +13,9 @@ import Firebase
 class UserProfileViewController: UIViewController, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
     
     // MARK: - Properties
-    private lazy var uid = Auth.auth().currentUser?.uid
+    private let uid = Auth.auth().currentUser?.uid
+    private let storageRef = Storage.storage().reference()
+    private let databaseRef = Database.database().reference()
     
     private lazy var userImageView: UIImageView = {
         let imageView = UIImageView()
@@ -109,20 +111,36 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
     }
     
     func getUserData()  {
+        var imageURL:String?
         Database.database().reference().child(Constants.users).child(uid!).observeSingleEvent(of: .value, with: {(snapshot) in
             let value = snapshot.value as? NSDictionary
-            print(value!)
+            
             self.firstNameTextField.text = value?["firstName"] as? String
             self.lastNameTextField.text = value?["lastName"] as? String
             self.userIDTextField.text = value?["userId"] as? String
             self.addressTextView.text = value?["address"] as? String
+            imageURL = value?["imageURL"] as? String
+            
+            if let imageURL = imageURL {
+                let url = URL(string: imageURL)
+                let task = URLSession.shared.dataTask(with: url!, completionHandler: { data, _, error in
+                    guard let data = data, error == nil else{
+                        return
+                    }
+                    DispatchQueue.main.async {
+                        let image = UIImage(data: data)
+                        self.userImageView.image = image
+                    }
+                })
+                task.resume()
+            }
         })
+        
+        
     }
     
     @objc func imageTapped(tapGestureRecognizer: UITapGestureRecognizer)
     {
-        let tappedImage = tapGestureRecognizer.view as! UIImageView
-        
         let picker = UIImagePickerController()
         picker.sourceType = UIImagePickerController.isSourceTypeAvailable(.camera) ? .camera : .photoLibrary
         picker.mediaTypes = ["public.image"]
@@ -132,12 +150,12 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
             PHPhotoLibrary.requestAuthorization { (status) in
                 switch status {
                 case.authorized:
-                    self.present(picker, animated: true)
+                    break
                 default: break
                 }
             }
         } else {
-            present(picker, animated: true)
+            self.present(picker, animated: true)
         }
         
     }
@@ -147,17 +165,31 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
     }
     
     public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        picker.dismiss(animated: true, completion: nil)
+        guard let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage else { return }
+        userImageView.image = image
         
-        self.dismiss(animated: true) { [weak self] in
-            guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else { return }
-            self?.userImageView.image = image
-            let data = image.pngData()
-            
+        guard let imageData = image.jpegData(compressionQuality: 0.5) else {
+            return
         }
-        
+        uploadPhoto(data: imageData)
     }
     
-    func uploadImage()  {
+    func uploadPhoto(data: Data)  {
+        let userRef = storageRef.child("ProfileImages/\(uid!).jpeg")
+        userRef.putData(data, metadata: nil, completion: {(metadata, error) in
+            guard metadata != nil else {
+                print("Failed")
+                return
+            }
+            print("Upload Successful")
+            userRef.downloadURL(completion: { (url, error) in
+                guard let url = url, error == nil else { return }
+                
+                self.databaseRef.child(Constants.users).child(self.uid!).updateChildValues(["imageURL": url.absoluteString])
+            })
+        }
+        )
     }
     
     override func viewDidLoad() {

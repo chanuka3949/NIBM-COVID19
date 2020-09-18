@@ -9,6 +9,7 @@ target 'NIBM COVID19' do
   pod 'Firebase/Auth'
   pod 'Firebase/Database'
   pod 'GeoFire'
+  pod 'Firebase/Storage'
 
   target 'NIBM COVID19Tests' do
     inherit! :search_paths

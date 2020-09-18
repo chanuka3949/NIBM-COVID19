@@ -8,11 +8,14 @@
 
 import UIKit
 import Firebase
-
+import GeoFire
 
 class HomeViewController: UIViewController {
     
     // MARK: - Properties
+    
+    private var locationManager = LocationHandler.sharedInstance.locationManager
+    private let uid = Auth.auth().currentUser?.uid
     
     private lazy var stayHomelabel: UILabel = {
         var firstString = NSMutableAttributedString(string: "All you need is\n",  attributes: [.foregroundColor: UIColor.black])
@@ -146,7 +149,7 @@ class HomeViewController: UIViewController {
         var low = 0
         var medium = 0
         var high = 0
-        var riskLevel = ""
+        var riskLevel = 0
         
         let notInfected: UILabel = notInfectedSummaryView.subviews[1] as! UILabel
         let highRisk: UILabel = highRiskSummaryView.subviews[1] as! UILabel
@@ -159,20 +162,20 @@ class HomeViewController: UIViewController {
             for child in snapshot.children{
                 
                 let value:DataSnapshot = child as! DataSnapshot
-                riskLevel = value.childSnapshot(forPath: "riskLevel").value as! String
+                riskLevel = value.childSnapshot(forPath: "riskLevel").value as? Int ?? 0
                 
                 switch riskLevel {
-                case "Very High":
+                case 5:
                     high+=1
-                case "High":
+                case 4:
                     high+=1
-                case "Medium":
+                case 3:
                     medium+=1
-                case "Low":
+                case 2:
                     medium+=1
-                case "Very Low":
-                    medium+=1
-                case "None":
+                case 1:
+                    low+=1
+                case 0:
                     low+=1
                 default: break
                 }
@@ -182,40 +185,24 @@ class HomeViewController: UIViewController {
             highRisk.text = String(high)
             lowRisk.text = String(medium)
         }
-        
-        //        Database.database().reference().child(Constants.userHealth).child(Constants.surveySummary).observe(.childAdded, with: { (snapshot) -> Void in
-        //            let value = snapshot.childSnapshot(forPath: "riskLevel").value
-        //            riskLevel = value as? String ?? ""
-        //
-        //            switch riskLevel {
-        //            case "Very High":
-        //                high+=1
-        //            case "High":
-        //                high+=1
-        //            case "Medium":
-        //                medium+=1
-        //            case "Low":
-        //                medium+=1
-        //            case "Very Low":
-        //                medium+=1
-        //            case "None":
-        //                low+=1
-        //            default: break
-        //            }
-        //            notInfected.text = String(low)
-        //            highRisk.text = String(high)
-        //            lowRisk.text = String(medium)
-        //        })
         var news = ""
-        Database.database().reference().child(Constants.newsUpdates).queryOrderedByKey().queryLimited(toLast: 3).observe(.value, with: { (snapshot) -> Void in
-            for child in snapshot.children{
-                
-                let value:DataSnapshot = child as! DataSnapshot
-                let newsVal = "\(value.childSnapshot(forPath: "news").value as! String) \n\n"
-                news.append(contentsOf: newsVal)
-                print(value.childSnapshot(forPath: "news").value as! String)
-            }
-            self.newsUpdateMessageLabel.text = news
+        Database.database().reference().child(Constants.newsUpdates).queryOrderedByKey().queryLimited(toLast: 1).observe(.childAdded, with: { (snapshot) -> Void in
+            let newsVal = "\(snapshot.childSnapshot(forPath: "news").value!) \n\n"
+                        news.append(contentsOf: newsVal)
+                        self.newsUpdateMessageLabel.text = news
+//            if snapshot.childrenCount == 0 {
+//                self.newsUpdateMessageLabel.text = "No News Updates"
+//                self.newsUpdateMessageLabel.textAlignment = .center
+//                return
+//            }
+//            news = ""
+//
+//            for child in snapshot.children{
+//                let value:DataSnapshot = child as! DataSnapshot
+//                let newsVal = "\(value.childSnapshot(forPath: "news").value as! String) \n\n"
+//                news.append(contentsOf: newsVal)
+//            }
+//            self.newsUpdateMessageLabel.text = news
         })
         
     }
@@ -223,11 +210,12 @@ class HomeViewController: UIViewController {
         super.viewDidLoad()
         setupUserInterface()
         getStats()
+        LocationHandler.sharedInstance.updateUserLocation(uid: uid!)
     }
     
     
     func setupUserInterface() {
-        
+                navigationController?.navigationBar.topItem?.title = "Home"
         //                navigationController?.navigationBar.isHidden = true
         view.backgroundColor = UIColor(red: 244/255, green: 244/255, blue: 244/255, alpha: 1)
         
@@ -300,7 +288,6 @@ class HomeViewController: UIViewController {
         viewNotificationsButton.setViewConstraints(top: newsUpdatesView.topAnchor, right: newsUpdatesView.rightAnchor, marginTop: 5, marginBottom: 5, marginLeft: 5, marginRight: 5)
         
         newsUpdateMessageLabel.setViewConstraints(top: newsUpdatesView.topAnchor, bottom: newsUpdatesView.bottomAnchor, left: newsUpdatesView.leftAnchor, right: newsUpdatesView.rightAnchor, marginTop: 40, marginBottom: 10, marginLeft: 10, marginRight: 10)
-        
     }
     
     /*
