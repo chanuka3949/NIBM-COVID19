@@ -61,5 +61,4 @@ class CreateNewsItemViewController: UIViewController {
         newsItemStackView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -20).isActive = true
         newsItemStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20).isActive = true
     }
-    
 }

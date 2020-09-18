@@ -135,8 +135,6 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
                 task.resume()
             }
         })
-        
-        
     }
     
     @objc func imageTapped(tapGestureRecognizer: UITapGestureRecognizer)

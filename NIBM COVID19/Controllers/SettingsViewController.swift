@@ -17,7 +17,7 @@ class SettingsViewController: UIViewController {
     }()
     
     let profileButton: UIButton = {
-       let button = UIButton()
+        let button = UIButton()
         button.setTitle("Profile", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.setTitleColor(.systemBlue, for: .highlighted)
@@ -27,7 +27,7 @@ class SettingsViewController: UIViewController {
     }()
     
     let contactUsButton: UIButton = {
-       let button = UIButton()
+        let button = UIButton()
         button.setTitle("Contact Us", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.setTitleColor(.systemBlue, for: .highlighted)
@@ -36,7 +36,7 @@ class SettingsViewController: UIViewController {
     }()
     
     let seperatorView: UIView = {
-       let view = UIView()
+        let view = UIView()
         view.backgroundColor = .lightGray
         view.setViewConstraints(bottom: view.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, height: 1)
         return view

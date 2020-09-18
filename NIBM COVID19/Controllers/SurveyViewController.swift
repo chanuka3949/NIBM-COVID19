@@ -399,7 +399,6 @@ class SurveyViewController: UIViewController {
         }
     }
     
-    
     func setupUserInterface() {
         //navigationController?.navigationBar.isHidden = true
         view.backgroundColor = .white

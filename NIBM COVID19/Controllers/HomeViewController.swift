@@ -188,21 +188,21 @@ class HomeViewController: UIViewController {
         var news = ""
         Database.database().reference().child(Constants.newsUpdates).queryOrderedByKey().queryLimited(toLast: 1).observe(.childAdded, with: { (snapshot) -> Void in
             let newsVal = "\(snapshot.childSnapshot(forPath: "news").value!) \n\n"
-                        news.append(contentsOf: newsVal)
-                        self.newsUpdateMessageLabel.text = news
-//            if snapshot.childrenCount == 0 {
-//                self.newsUpdateMessageLabel.text = "No News Updates"
-//                self.newsUpdateMessageLabel.textAlignment = .center
-//                return
-//            }
-//            news = ""
-//
-//            for child in snapshot.children{
-//                let value:DataSnapshot = child as! DataSnapshot
-//                let newsVal = "\(value.childSnapshot(forPath: "news").value as! String) \n\n"
-//                news.append(contentsOf: newsVal)
-//            }
-//            self.newsUpdateMessageLabel.text = news
+            news.append(contentsOf: newsVal)
+            self.newsUpdateMessageLabel.text = news
+            //            if snapshot.childrenCount == 0 {
+            //                self.newsUpdateMessageLabel.text = "No News Updates"
+            //                self.newsUpdateMessageLabel.textAlignment = .center
+            //                return
+            //            }
+            //            news = ""
+            //
+            //            for child in snapshot.children{
+            //                let value:DataSnapshot = child as! DataSnapshot
+            //                let newsVal = "\(value.childSnapshot(forPath: "news").value as! String) \n\n"
+            //                news.append(contentsOf: newsVal)
+            //            }
+            //            self.newsUpdateMessageLabel.text = news
         })
         
     }
@@ -215,8 +215,7 @@ class HomeViewController: UIViewController {
     
     
     func setupUserInterface() {
-                navigationController?.navigationBar.topItem?.title = "Home"
-        //                navigationController?.navigationBar.isHidden = true
+        navigationController?.navigationBar.topItem?.title = "Summary"
         view.backgroundColor = UIColor(red: 244/255, green: 244/255, blue: 244/255, alpha: 1)
         
         let safetyActionView: UIView = {

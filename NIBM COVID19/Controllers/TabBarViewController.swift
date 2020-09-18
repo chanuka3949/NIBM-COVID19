@@ -34,14 +34,14 @@ class TabBarViewController: UITabBarController {
         let homeVC = HomeViewController()
         let UpdateVC = UpdateViewController()
         let settingsVC = SettingsViewController()
-
+        
         
         homeVC.tabBarItem = UITabBarItem(tabBarSystemItem: .featured, tag: 0)
         UpdateVC.tabBarItem = UITabBarItem(tabBarSystemItem: .mostRecent, tag: 1)
         settingsVC.tabBarItem = UITabBarItem(tabBarSystemItem: .bookmarks, tag: 2)
         
         let controllerList = [homeVC, UpdateVC, settingsVC]
-//        viewControllers = controllerList
+        //        viewControllers = controllerList
         viewControllers = controllerList.map { UINavigationController(rootViewController: $0) }
     }
     

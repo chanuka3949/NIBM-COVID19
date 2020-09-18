@@ -42,8 +42,8 @@ class MapViewController: UIViewController {
     
     func getNearbyUsers() {
         guard let location = locationManager?.location else {return}
-        LocationHandler.sharedInstance.getNearbyUserLocations(location: location) { (uid, location) in
-            self.getUserRiskLevels(uid: uid, completion: {(riskLevel) in
+        LocationHandler.sharedInstance.getNearbyUserLocations(location: location) {[weak self] (uid, location) in
+            self?.getUserRiskLevels(uid: uid, completion: {(riskLevel) in
                 var color: UIColor = .systemBlue
                 switch riskLevel {
                 case 5:
@@ -62,7 +62,7 @@ class MapViewController: UIViewController {
                 }
                 let annotation = UserAnnotation(uid: uid, coordinate: location.coordinate, color: color)
                 var userAlreadyVisible: Bool {
-                    return self.mapView.annotations.contains { (userAnnotation) -> Bool in
+                    return (self?.mapView.annotations.contains { (userAnnotation) -> Bool in
                         guard let userAnnotation = userAnnotation as? UserAnnotation else {return false}
                         if userAnnotation.uid == annotation.uid {
                             print("DEBUG: User already exists in map")
@@ -71,11 +71,11 @@ class MapViewController: UIViewController {
                             return true
                         }
                         return false
-                    }
+                        })!
                 }
                 if !userAlreadyVisible {
                     print("DEBUG: User annotation added to map \(annotation.uid)")
-                    self.mapView.addAnnotation(annotation)
+                    self?.mapView.addAnnotation(annotation)
                 }
             })
         }

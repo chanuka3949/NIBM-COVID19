@@ -142,14 +142,14 @@ class SignUpViewController: UIViewController {
                 return
             }
             print("User registered successfully!")
-
+            
             guard let uid = result?.user.uid else { return }
             
             let geofireRef = DatabaseService.databaseReference.child(Constants.userLocations)
             let geoFire = GeoFire(firebaseRef: geofireRef)
             
             guard let location = self.locationManager?.location else { return }
-
+            
             geoFire.setLocation(location, forKey: uid) { (error) in
                 if (error != nil) {
                     print("An error occured: \(error!)")
@@ -220,7 +220,7 @@ class SignUpViewController: UIViewController {
         signUpStackView.axis = .vertical
         signUpStackView.distribution = .fillEqually
         signUpStackView.spacing = 15
-
+        
         view.addSubview(signUpStackView)
         signUpStackView.translatesAutoresizingMaskIntoConstraints = false
         

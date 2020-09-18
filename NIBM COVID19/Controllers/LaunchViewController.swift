@@ -73,7 +73,6 @@ class LaunchViewController: UIViewController {
     }
     
     func setupUserInterface() {
-        //navigationController?.navigationBar.isHidden = true
         view.backgroundColor = .white
         
         view.addSubview(logoImageView)

@@ -21,11 +21,11 @@ class NotificationViewController: UIViewController {
     
     
     func fetchNewsUpdates() {
-        Database.database().reference().child(Constants.newsUpdates).observe(.childAdded, with: { (snapshot) -> Void in
+        DatabaseService.databaseReference.child(Constants.newsUpdates).observe(.childAdded, with: { [weak self] (snapshot) -> Void in
             let value = snapshot.childSnapshot(forPath: "news").value
             let comment: String = value as! String
-            self.newsUpdates.append(comment)
-            self.newsUpdatesTableView.insertRows(at: [IndexPath(row: self.newsUpdates.count-1, section: 0)], with: UITableView.RowAnimation.automatic)
+            self!.newsUpdates.append(comment)
+            self!.newsUpdatesTableView.insertRows(at: [IndexPath(row: (self?.newsUpdates.count)!-1, section: 0)], with: UITableView.RowAnimation.automatic)
         }) { (error) in
             print("Error Occurred: \(error)")
         }
@@ -46,7 +46,7 @@ class NotificationViewController: UIViewController {
 }
 extension NotificationViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-                newsUpdates.count
+        newsUpdates.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = newsUpdatesTableView.dequeueReusableCell(withIdentifier: "NewsItemCell", for: indexPath) as! NewsItemCell

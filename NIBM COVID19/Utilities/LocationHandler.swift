@@ -13,6 +13,7 @@ class LocationHandler: NSObject, CLLocationManagerDelegate {
     
     static let sharedInstance = LocationHandler()
     
+    
     var locationManager: CLLocationManager!
     var location: CLLocation?
     
@@ -63,7 +64,7 @@ class LocationHandler: NSObject, CLLocationManagerDelegate {
         let geoFire = GeoFire(firebaseRef: geofireRef)
         
         guard let location = self.locationManager?.location else { return }
-
+        
         geoFire.setLocation(location, forKey: uid) { (error) in
             if (error != nil) {
                 print("An error occured: \(error!)")
