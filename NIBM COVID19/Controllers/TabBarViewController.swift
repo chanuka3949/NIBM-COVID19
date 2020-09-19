@@ -14,7 +14,6 @@ class TabBarViewController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         checkUserAuthStatus()
-        LocationHandler.sharedInstance.getLocationServicePermission()
     }
     
     func checkUserAuthStatus(){

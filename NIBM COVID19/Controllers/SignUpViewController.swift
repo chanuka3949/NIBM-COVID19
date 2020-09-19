@@ -115,7 +115,7 @@ class SignUpViewController: UIViewController {
     }()
     
     @objc func popViewController() {
-        //navigationController?.popViewController(animated: true)
+        navigationController?.popViewController(animated: true)
     }
     
     @objc func handleAlreadyHaveAnAccount() {
@@ -135,6 +135,9 @@ class SignUpViewController: UIViewController {
         guard let lastName = lastNameTextField.text else { return }
         let role = userRoleSegmentedControl.selectedSegmentIndex
         
+        var user = User(email: email, firstName: firstName, lastName: lastName, password: password, role: role)
+        
+        print(user)
         
         Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
             if let error = error {
@@ -145,32 +148,34 @@ class SignUpViewController: UIViewController {
             
             guard let uid = result?.user.uid else { return }
             
-            let geofireRef = DatabaseService.databaseReference.child(Constants.userLocations)
-            let geoFire = GeoFire(firebaseRef: geofireRef)
+            user.uid = uid
             
-            guard let location = self.locationManager?.location else { return }
+//            let geofireRef = DatabaseService.databaseReference.child(Constants.userLocations)
+//            let geoFire = GeoFire(firebaseRef: geofireRef)
+//            
+//            guard let location = self.locationManager?.location else { return }
+//            
+//            geoFire.setLocation(location, forKey: uid) { (error) in
+//                if (error != nil) {
+//                    print("An error occured: \(error!)")
+//                    return
+//                }
+//                print("Saved location successfully!")
+//            }
             
-            geoFire.setLocation(location, forKey: uid) { (error) in
-                if (error != nil) {
-                    print("An error occured: \(error!)")
-                    return
-                }
-                print("Saved location successfully!")
-            }
-            
-            self.saveUserProfileData(firstName: firstName, lastName: lastName, userRole: role, userId: uid)
+            self.saveUserProfileData(user: user)
         }
     }
     
-    func saveUserProfileData(firstName: String, lastName: String, userRole: Int, userId: String) {
+    func saveUserProfileData(user: User) {
         
         let values = [
-            "firstName": firstName,
-            "lastName": lastName,
-            "role": userRole
+            "firstName": user.firstName!,
+            "lastName": user.lastName!,
+            "role": user.role!
             ] as [String : Any]
         
-        Database.database().reference().child(Constants.users).child(userId).updateChildValues(values) { (error, ref) in
+        Database.database().reference().child(Constants.users).child(user.uid!).updateChildValues(values) { (error, ref) in
             if let error = error {
                 print("ERROR: Could not save user data to database \(error)")
                 return
@@ -190,18 +195,18 @@ class SignUpViewController: UIViewController {
         
         guard let mainViewController = keyWindow?.rootViewController as? TabBarViewController else { return }
         mainViewController.setupUserInterface()
+        mainViewController.selectedIndex = 0
         self.dismiss(animated: true, completion: nil)
     }
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUserInterface()
+        LocationHandler.sharedInstance.getLocationServicePermission()
     }
     
-    
     func setupUserInterface() {
-        //navigationController?.navigationBar.isHidden = true
         view.backgroundColor = .white
-        
+        navigationController?.navigationBar.isHidden = true
         view.addSubview(popViewControllerButton)
         popViewControllerButton.translatesAutoresizingMaskIntoConstraints = false
         

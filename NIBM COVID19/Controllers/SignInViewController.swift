@@ -98,7 +98,7 @@ class SignInViewController: UIViewController {
     }
     
     @objc func popViewController() {
-        //navigationController?.popViewController(animated: true)
+        navigationController?.popViewController(animated: true)
     }
     
     override func viewDidLoad() {
@@ -109,7 +109,7 @@ class SignInViewController: UIViewController {
     }
     
     func setupUserInterface() {
-        //navigationController?.navigationBar.isHidden = true
+        navigationController?.navigationBar.isHidden = true
         view.backgroundColor = .white
         
         view.addSubview(popViewControllerButton)

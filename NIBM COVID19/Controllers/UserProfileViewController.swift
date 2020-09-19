@@ -16,6 +16,7 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
     private let uid = Auth.auth().currentUser?.uid
     private let storageRef = Storage.storage().reference()
     private let databaseRef = Database.database().reference()
+    private let spinner = UIActivityIndicatorView(style: .large)
     
     private lazy var userImageView: UIImageView = {
         let imageView = UIImageView()
@@ -95,19 +96,32 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
     }()
     
     @objc func handleUpdate() {
-        let values = [
-            "firstName": firstNameTextField.text,
-            "lastName": lastNameTextField.text,
-            "userId": userIDTextField.text,
-            "address": addressTextView.text
-        ]
-        
-        guard let currentUser = Auth.auth().currentUser else {return}
-        let uid = currentUser.uid
-        
-        Database.database().reference().child("users").child(uid).updateChildValues(values as [AnyHashable : Any]) { (error, ref) in
-            print("Successfuly Registerd and profile updated")
-        }
+        spinner.startAnimating()
+        let data = userImageView.image!.jpegData(compressionQuality: 0.5)
+        uploadPhoto(data: data!, completion: {(isUploaded, downloadURL) in
+            if(isUploaded == false) {
+                self.spinner.stopAnimating()
+                let alert = UIAlertController(title: "Error", message: "Couldn't save user profile data", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                self.present(alert, animated: true)
+                return
+            }
+            let values = [
+                "firstName": self.firstNameTextField.text as String?,
+                "lastName": self.lastNameTextField.text as String?,
+                "userId": self.userIDTextField.text as String?,
+                "address": self.addressTextView.text as String?,
+                "imageURL": downloadURL.absoluteString
+            ]
+            
+            Database.database().reference().child("users").child(self.uid!).updateChildValues(values as [AnyHashable : Any]) { (error, ref) in
+                print("Successfuly Registerd and profile updated")
+                self.spinner.stopAnimating()
+                let alert = UIAlertController(title: "Success", message: "User profile data saved", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                self.present(alert, animated: true)
+            }
+        })
     }
     
     func getUserData()  {
@@ -155,7 +169,6 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         } else {
             self.present(picker, animated: true)
         }
-        
     }
     
     public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
@@ -166,25 +179,19 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         picker.dismiss(animated: true, completion: nil)
         guard let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage else { return }
         userImageView.image = image
-        
-        guard let imageData = image.jpegData(compressionQuality: 0.5) else {
-            return
-        }
-        uploadPhoto(data: imageData)
     }
     
-    func uploadPhoto(data: Data)  {
+    func uploadPhoto(data: Data, completion: @escaping(Bool, URL) -> Void) {
         let userRef = storageRef.child("ProfileImages/\(uid!).jpeg")
         userRef.putData(data, metadata: nil, completion: {(metadata, error) in
             guard metadata != nil else {
                 print("Failed")
+                completion(false, URL(string: "")!)
                 return
             }
-            print("Upload Successful")
             userRef.downloadURL(completion: { (url, error) in
                 guard let url = url, error == nil else { return }
-                
-                self.databaseRef.child(Constants.users).child(self.uid!).updateChildValues(["imageURL": url.absoluteString])
+                completion(true, url)
             })
         }
         )
@@ -227,6 +234,12 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         updateButton.setViewConstraints(bottom: view.safeAreaLayoutGuide.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 10, marginBottom: 10, marginLeft: 20, marginRight: 20)
         
         addressTextView.setViewConstraints(top: addressLabel.bottomAnchor, bottom: updateButton.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 5, marginBottom: 10, marginLeft: 20, marginRight: 20, height: 80)
+        
+        spinner.translatesAutoresizingMaskIntoConstraints = false
+        spinner.color = .black
+        view.addSubview(spinner)
+        spinner.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        spinner.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         
     }
     /*

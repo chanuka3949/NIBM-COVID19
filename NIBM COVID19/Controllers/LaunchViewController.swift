@@ -14,6 +14,8 @@ class LaunchViewController: UIViewController {
     
     private lazy var logoImageView: UIImageView = {
         let imageView = UIImageView()
+        imageView.layer.cornerRadius = 10
+        imageView.clipsToBounds = true
         imageView.image = UIImage(named: "Logo")
         return imageView
     }()
@@ -74,7 +76,7 @@ class LaunchViewController: UIViewController {
     
     func setupUserInterface() {
         view.backgroundColor = .white
-        
+        navigationController?.navigationBar.isHidden = true
         view.addSubview(logoImageView)
         logoImageView.translatesAutoresizingMaskIntoConstraints = false
         logoImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50).isActive = true

@@ -18,7 +18,7 @@ class SurveyViewController: UIViewController {
     private let context = (UIApplication.shared.delegate as? AppDelegate)!.persistentContainer.viewContext
     private var resultList = [SurveyResult]()
     private var result = SurveyResult(context: (UIApplication.shared.delegate as? AppDelegate)!.persistentContainer.viewContext)
-    private var user = User(context: (UIApplication.shared.delegate as? AppDelegate)!.persistentContainer.viewContext)
+    private var user = UserHealth(context: (UIApplication.shared.delegate as? AppDelegate)!.persistentContainer.viewContext)
     
     private lazy var yesButton: UIButton = {
         let button = UIButton()

@@ -18,9 +18,9 @@ class UpdateViewController: UIViewController {
     private let authContext = LAContext()
     private var error: NSError?
     private let context = (UIApplication.shared.delegate as? AppDelegate)!.persistentContainer.viewContext
-    private var resultList = [User]()
-    private var user = User(context: (UIApplication.shared.delegate as? AppDelegate)!.persistentContainer.viewContext)
-    private var lastUpdatedMoreThanADayAgo: Bool = false
+    private var resultList = [UserHealth]()
+    private var user = UserHealth(context: (UIApplication.shared.delegate as? AppDelegate)!.persistentContainer.viewContext)
+    private var lastUpdatedMoreThanADayAgo: Bool = true
     
     private lazy var updateTemperatureButton: UIButton = {
         let button = UIButton()
@@ -204,7 +204,7 @@ class UpdateViewController: UIViewController {
         let filterPredicate = NSPredicate(format: "uid == %@"
             , uid)
         let sortDescriptor = NSSortDescriptor(key: "modifiedDate", ascending: false)
-        let request: NSFetchRequest<User> = User.fetchRequest()
+        let request: NSFetchRequest<UserHealth> = UserHealth.fetchRequest()
         request.predicate = filterPredicate
         request.sortDescriptors = [sortDescriptor]
         request.fetchLimit = 1
