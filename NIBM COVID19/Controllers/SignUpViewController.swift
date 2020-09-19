@@ -137,8 +137,6 @@ class SignUpViewController: UIViewController {
         
         var user = User(email: email, firstName: firstName, lastName: lastName, password: password, role: role)
         
-        print(user)
-        
         Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
             if let error = error {
                 print("ERROR: Failed to register user \(error)")
@@ -147,21 +145,7 @@ class SignUpViewController: UIViewController {
             print("User registered successfully!")
             
             guard let uid = result?.user.uid else { return }
-            
             user.uid = uid
-            
-//            let geofireRef = DatabaseService.databaseReference.child(Constants.userLocations)
-//            let geoFire = GeoFire(firebaseRef: geofireRef)
-//            
-//            guard let location = self.locationManager?.location else { return }
-//            
-//            geoFire.setLocation(location, forKey: uid) { (error) in
-//                if (error != nil) {
-//                    print("An error occured: \(error!)")
-//                    return
-//                }
-//                print("Saved location successfully!")
-//            }
             
             self.saveUserProfileData(user: user)
         }

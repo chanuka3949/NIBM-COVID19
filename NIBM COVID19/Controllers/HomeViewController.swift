@@ -57,20 +57,6 @@ class HomeViewController: UIViewController {
     
     let lowRiskSummaryView = UIView().summaryView(imageName: Constants.yellowUserImage, count: 0, type: "Low Risk")
     
-    //    private let statusLabel: UILabel = {
-    //        let label = UILabel()
-    //        label.text = "No risk of infection in this area"
-    //        label.textAlignment = .center
-    //        return label
-    //    }()
-    
-    //    private let statusView: UIView = {
-    //        let view = UIView()
-    //        view.backgroundColor = .orange
-    //        view.layer.cornerRadius = 5
-    //        return view
-    //    }()
-    
     let newsUpdateMessageLabel: UILabel = {
         let label = UILabel()
         label.text = "No News Updates"

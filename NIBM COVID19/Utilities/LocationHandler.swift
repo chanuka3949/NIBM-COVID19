@@ -59,6 +59,18 @@ class LocationHandler: NSObject, CLLocationManagerDelegate {
         }
     }
     
+    func getDistancingUserLocations(location: CLLocation, completion: @escaping(String, CLLocation) -> Void) {
+        let geofireRef = DatabaseService.databaseReference.child(Constants.userLocations)
+        let geoFire = GeoFire(firebaseRef: geofireRef)
+        geofireRef.observe(.value) { (snapshot) in
+            geoFire.query(at: location, withRadius: 50).observe(.keyExited, with: { (uid, location) in
+                print("DEBUG: User Data retrieved")
+                completion(uid, location)
+            }
+            )
+        }
+    }
+    
     func updateUserLocation(uid: String) {
         let geofireRef = DatabaseService.databaseReference.child(Constants.userLocations)
         let geoFire = GeoFire(firebaseRef: geofireRef)
