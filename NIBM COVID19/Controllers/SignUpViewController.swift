@@ -207,15 +207,12 @@ class SignUpViewController: UIViewController {
     func setupUserInterface() {
         view.backgroundColor = .white
         navigationController?.navigationBar.isHidden = true
+        
         view.addSubview(popViewControllerButton)
-        popViewControllerButton.translatesAutoresizingMaskIntoConstraints = false
-        
-        popViewControllerButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
-        popViewControllerButton.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 20).isActive = true
-        
+        popViewControllerButton.setViewConstraints(top: view.safeAreaLayoutGuide.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor, marginTop: 20, marginLeft: 20)
+
         view.addSubview(titleLabel)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        
         titleLabel.centerXAnchor.constraint(equalTo:
             view.centerXAnchor).isActive = true
         titleLabel.topAnchor.constraint(equalTo: popViewControllerButton.bottomAnchor,
@@ -227,53 +224,16 @@ class SignUpViewController: UIViewController {
         signUpStackView.spacing = 15
         
         view.addSubview(signUpStackView)
-        signUpStackView.translatesAutoresizingMaskIntoConstraints = false
-        
-        signUpStackView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor,
-                                             constant: 20).isActive = true
-        signUpStackView.rightAnchor.constraint(equalTo: view.rightAnchor,
-                                               constant: -20).isActive = true
-        signUpStackView.leftAnchor.constraint(equalTo: view.leftAnchor,
-                                              constant: 20).isActive = true
+        signUpStackView.setViewConstraints(top: titleLabel.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 20, marginLeft: 20, marginRight: 20)
         
         view.addSubview(signUpButton)
-        
-        signUpButton.translatesAutoresizingMaskIntoConstraints = false
-        
-        signUpButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        signUpButton.topAnchor.constraint(equalTo: signUpStackView.bottomAnchor, constant: 30).isActive = true
-        signUpButton.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor,
-                                            constant: -20).isActive = true
-        signUpButton.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor,
-                                           constant: 20).isActive = true
-        signUpButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        signUpButton.setViewConstraints(top: signUpStackView.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 30, marginLeft: 20, marginRight: 20, height: 40)
         
         view.addSubview(termsOfAgreementLabel)
-        termsOfAgreementLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        termsOfAgreementLabel.centerXAnchor.constraint(equalTo:
-            view.centerXAnchor).isActive = true
-        termsOfAgreementLabel.topAnchor.constraint(equalTo: signUpButton.bottomAnchor,
-                                                   constant: 20).isActive = true
-        termsOfAgreementLabel.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor,
-                                                     constant: -20).isActive = true
-        termsOfAgreementLabel.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor,
-                                                    constant: 20).isActive = true
+        termsOfAgreementLabel.setViewConstraints(top: signUpButton.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 20, marginLeft: 20, marginRight: 20)
         
         view.addSubview(alreadyHaveAnAccountButton)
-        
-        alreadyHaveAnAccountButton.translatesAutoresizingMaskIntoConstraints = false
-        
-        alreadyHaveAnAccountButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        alreadyHaveAnAccountButton.topAnchor.constraint(equalTo: termsOfAgreementLabel.bottomAnchor, constant: 20).isActive = true
-        alreadyHaveAnAccountButton.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor,
-                                                          constant: -20).isActive = true
-        alreadyHaveAnAccountButton.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor,
-                                                         constant: 20).isActive = true
-        alreadyHaveAnAccountButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        
-        
-        
+        alreadyHaveAnAccountButton.setViewConstraints(top: termsOfAgreementLabel.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 20, marginLeft: 20, marginRight: 20, height: 40)
     }
     /*
      // MARK: - Navigation

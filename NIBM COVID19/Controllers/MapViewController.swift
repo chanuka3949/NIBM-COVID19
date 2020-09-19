@@ -44,7 +44,6 @@ class MapViewController: UIViewController {
         guard let location = locationManager?.location else {return}
         LocationHandler.sharedInstance.getNearbyUserLocations(location: location) {[weak self] (uid, location) in
             if (uid == self?.currentUser) {
-                print("Current user")
                 return
             }
             self?.getUserRiskLevels(uid: uid, completion: {(riskLevel) in

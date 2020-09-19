@@ -113,14 +113,10 @@ class SignInViewController: UIViewController {
         view.backgroundColor = .white
         
         view.addSubview(popViewControllerButton)
-        popViewControllerButton.translatesAutoresizingMaskIntoConstraints = false
-        
-        popViewControllerButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
-        popViewControllerButton.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 20).isActive = true
+        popViewControllerButton.setViewConstraints(top: view.safeAreaLayoutGuide.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor, marginTop: 20, marginLeft: 20)
         
         view.addSubview(titleLabel)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        
         titleLabel.centerXAnchor.constraint(equalTo:
             view.centerXAnchor).isActive = true
         titleLabel.topAnchor.constraint(equalTo: popViewControllerButton.bottomAnchor,
@@ -132,38 +128,13 @@ class SignInViewController: UIViewController {
         signInStackView.spacing = 15
         
         view.addSubview(signInStackView)
-        signInStackView.translatesAutoresizingMaskIntoConstraints = false
-        
-        signInStackView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor,
-                                             constant: 20).isActive = true
-        signInStackView.rightAnchor.constraint(equalTo: view.rightAnchor,
-                                               constant: -20).isActive = true
-        signInStackView.leftAnchor.constraint(equalTo: view.leftAnchor,
-                                              constant: 20).isActive = true
+        signInStackView.setViewConstraints(top: titleLabel.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 20, marginLeft: 20, marginRight: 20)
         
         view.addSubview(signInButton)
-        
-        signInButton.translatesAutoresizingMaskIntoConstraints = false
-        
-        signInButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        signInButton.topAnchor.constraint(equalTo: signInStackView.bottomAnchor, constant: 30).isActive = true
-        signInButton.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor,
-                                            constant: -20).isActive = true
-        signInButton.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor,
-                                           constant: 20).isActive = true
-        signInButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        signInButton.setViewConstraints(top: signInStackView.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 30, marginLeft: 20, marginRight: 20, height: 40)
         
         view.addSubview(needAnAccountButton)
-        
-        needAnAccountButton.translatesAutoresizingMaskIntoConstraints = false
-        
-        needAnAccountButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        needAnAccountButton.topAnchor.constraint(equalTo: signInButton.bottomAnchor, constant: 30).isActive = true
-        needAnAccountButton.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor,
-                                                   constant: -20).isActive = true
-        needAnAccountButton.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor,
-                                                  constant: 20).isActive = true
-        needAnAccountButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        needAnAccountButton.setViewConstraints(top: signInButton.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 30, marginLeft: 20, marginRight: 20, height: 40)
     }
     
     /*
