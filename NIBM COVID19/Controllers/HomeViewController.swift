@@ -71,18 +71,9 @@ class HomeViewController: UIViewController {
     //        return view
     //    }()
     
-    //    private lazy var signOutButton: UIButton = {
-    //        let button = UIButton()
-    //        button.setTitle("Sign Out", for: .normal)
-    //        button.setTitleColor(.black, for: .normal)
-    //        button.layer.cornerRadius = 5
-    //        button.layer.borderWidth = 0.5
-    //        button.addTarget(self, action: #selector(handleSignOut), for: .touchUpInside)
-    //        return button
-    //    }()
     let newsUpdateMessageLabel: UILabel = {
         let label = UILabel()
-        label.text = "Some news about the COVID 19 Pandemic. This is an opportunity to get together and help each other rather than fight like some shitheads. La la lalalalalalalala hurhaurjwsejiasufioudasjfiosdfiosdfniodsfndsoifndsoifnsdfijndsfjkdsnfjkdsnfjkdsnfdjknSome news about the COVID 19 Pandemic. This is an opportunity to get together and help each other rather than fight like some shitheads. La la lalalalalalalala hurhaurjwsejiasufioudasjfiosdfiosdfniodsfndsoifndsoifnsdfijndsfjkdsnfjkdsnfjkdsnfdjkn"
+        label.text = "No News Updates"
         label.font = label.font.withSize(14)
         label.numberOfLines = 0
         return label
@@ -112,18 +103,6 @@ class HomeViewController: UIViewController {
     @objc func viewNotifications() {
         let notificationViewController = NotificationViewController()
         navigationController?.pushViewController(notificationViewController, animated: true)
-    }
-    
-    @objc func handleSignOut()  {
-        let authenticatedUser = Auth.auth()
-        do {
-            try authenticatedUser.signOut()
-            let launchViewController = LaunchViewController()
-            launchViewController.modalPresentationStyle = .fullScreen
-            self.present(launchViewController, animated: true, completion: nil)
-        } catch let signOutError as NSError {
-            print ("Error signing out: %@", signOutError)
-        }
     }
     
     private lazy var universityCaseUpdatelabel: UILabel = {
@@ -275,8 +254,6 @@ class HomeViewController: UIViewController {
         //        separatorView.backgroundColor = .lightGray
         //        view.addSubview(separatorView)
         //        separatorView.setViewConstraints(bottom: newsUpdatesView.bottomAnchor, left: newsUpdatesView.leftAnchor, right: newsUpdatesView.rightAnchor, marginLeft: 8, height: 0.75)
-        
-        
         
         view.addSubview(newsUpdatesView)
         newsUpdatesView.setViewConstraints(top: safetyActionView.bottomAnchor, bottom: summaryView.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 10, marginBottom: 10, marginLeft: 10, marginRight: 10)

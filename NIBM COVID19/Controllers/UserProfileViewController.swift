@@ -222,10 +222,11 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         view.addSubview(addressLabel)
         addressLabel.setViewConstraints(top: userIDTextField.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 10, marginBottom: 10, marginLeft: 20, marginRight: 20)
         view.addSubview(addressTextView)
-        addressTextView.setViewConstraints(top: addressLabel.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 5, marginBottom: 10, marginLeft: 20, marginRight: 20, height: 100)
         
         view.addSubview(updateButton)
         updateButton.setViewConstraints(bottom: view.safeAreaLayoutGuide.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 10, marginBottom: 10, marginLeft: 20, marginRight: 20)
+        
+        addressTextView.setViewConstraints(top: addressLabel.bottomAnchor, bottom: updateButton.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 5, marginBottom: 10, marginLeft: 20, marginRight: 20, height: 80)
         
     }
     /*

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class SettingsViewController: UIViewController {
     
@@ -42,12 +43,33 @@ class SettingsViewController: UIViewController {
         return view
     }()
     
+    private lazy var signOutButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Sign Out", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.layer.cornerRadius = 5
+        button.layer.borderWidth = 0.5
+        button.addTarget(self, action: #selector(handleSignOut), for: .touchUpInside)
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.navigationBar.topItem?.title = "Settings"
         view.backgroundColor = .white
         setupUserInterface()
         // Do any additional setup after loading the view.
+    }
+    
+    @objc func handleSignOut()  {
+        do {
+            try Auth.auth().signOut()
+            let launchViewController = UINavigationController(rootViewController: LaunchViewController())
+            launchViewController.modalPresentationStyle = .fullScreen
+            self.present(launchViewController, animated: true, completion: nil)
+        } catch let signOutError as NSError {
+            print ("Error signing out: %@", signOutError)
+        }
     }
     
     @objc func goToProfile() {
@@ -64,6 +86,9 @@ class SettingsViewController: UIViewController {
         
         view.addSubview(contactUsButton)
         contactUsButton.setViewConstraints(top: seperatorView.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 10, marginLeft: 20, height: 40)
+        
+        view.addSubview(signOutButton)
+        signOutButton.setViewConstraints(bottom: view.safeAreaLayoutGuide.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 10, marginBottom: 10, marginLeft: 10, marginRight: 10)
     }
     
     /*

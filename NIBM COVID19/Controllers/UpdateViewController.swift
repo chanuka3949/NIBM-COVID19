@@ -20,6 +20,7 @@ class UpdateViewController: UIViewController {
     private let context = (UIApplication.shared.delegate as? AppDelegate)!.persistentContainer.viewContext
     private var resultList = [User]()
     private var user = User(context: (UIApplication.shared.delegate as? AppDelegate)!.persistentContainer.viewContext)
+    private var lastUpdatedMoreThanADayAgo: Bool = false
     
     private lazy var updateTemperatureButton: UIButton = {
         let button = UIButton()
@@ -76,7 +77,7 @@ class UpdateViewController: UIViewController {
     }()
     
     func fetchUserTemperatureDate(uid: String) {
-        Database.database().reference().child(Constants.userHealth).child(uid).child(Constants.userTemperature).observe(.value, with: { (snapshot) in
+        Database.database().reference().child(Constants.userHealth).child(uid).child(Constants.userTemperature).observe(.value, with: { [weak self] (snapshot) in
             let value = snapshot.value as? NSDictionary
             let formattedDate: DateFormatter = {
                 let date = DateFormatter()
@@ -85,16 +86,23 @@ class UpdateViewController: UIViewController {
                 return date
             }()
             if value?["temperature"] != nil {
-                self.lastUpdatedTemperatureLabel.text = String(format: "%.1f", value?["temperature"] as! Float)
-                self.lastUpdatedTemperatureLabel.text?.append(contentsOf: " °C")
-                self.lastUpdatedTemperatureDateLabel.text = formattedDate.string(from: Date(timeIntervalSince1970: value?["modifiedDate"] as! TimeInterval))
+                self?.lastUpdatedTemperatureLabel.text = String(format: "%.1f", value?["temperature"] as! Float)
+                self?.lastUpdatedTemperatureLabel.text?.append(contentsOf: " °C")
+                self?.lastUpdatedTemperatureDateLabel.text = formattedDate.string(from: Date(timeIntervalSince1970: value?["modifiedDate"] as! TimeInterval))
+                if let lastUpdatedTime = value?["modifiedDate"] as? Double {
+                    if ((Date().timeIntervalSince1970 - lastUpdatedTime) >= 86400) {
+                        self?.lastUpdatedMoreThanADayAgo = true
+                    } else {
+                        self?.lastUpdatedMoreThanADayAgo = false
+                    }
+                }
             }
             
-            if self.lastUpdatedTemperatureLabel.text == nil || self.lastUpdatedTemperatureLabel.text == "Checking..." {
-                self.lastUpdatedTemperatureLabel.text = "Not Updated"
+            if self?.lastUpdatedTemperatureLabel.text == nil || self?.lastUpdatedTemperatureLabel.text == "Checking..." {
+                self?.lastUpdatedTemperatureLabel.text = "Not Updated"
             }
-            if self.lastUpdatedTemperatureDateLabel.text == nil || self.lastUpdatedTemperatureDateLabel.text == "Last Updated..." {
-                self.lastUpdatedTemperatureDateLabel.text = "Last Update: Never"
+            if self?.lastUpdatedTemperatureDateLabel.text == nil || self?.lastUpdatedTemperatureDateLabel.text == "Last Updated..." {
+                self?.lastUpdatedTemperatureDateLabel.text = "Last Update: Never"
             }
         }) { (error) in
             print("Error Occurred: \(error.localizedDescription)")
@@ -129,6 +137,13 @@ class UpdateViewController: UIViewController {
     
     @objc func updateTemperature() {
         if (temperatureTextField.text?.trimmingCharacters(in: [" "]).isEmpty)! {
+            return
+        }
+        if lastUpdatedMoreThanADayAgo == false {
+            let alert = UIAlertController(title: "Cannot update temperature", message: "You can only update the temperature once per day", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alert, animated: true)
+            temperatureTextField.text? = ""
             return
         }
         let tempValue: String = (temperatureTextField.text?.trimmingCharacters(in: [" "]))!

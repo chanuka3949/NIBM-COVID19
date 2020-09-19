@@ -35,13 +35,11 @@ class TabBarViewController: UITabBarController {
         let UpdateVC = UpdateViewController()
         let settingsVC = SettingsViewController()
         
-        
-        homeVC.tabBarItem = UITabBarItem(tabBarSystemItem: .featured, tag: 0)
-        UpdateVC.tabBarItem = UITabBarItem(tabBarSystemItem: .mostRecent, tag: 1)
-        settingsVC.tabBarItem = UITabBarItem(tabBarSystemItem: .bookmarks, tag: 2)
+        homeVC.tabBarItem = UITabBarItem(title: "Home", image: #imageLiteral(resourceName: "TabBarHome") , tag: 0)
+        UpdateVC.tabBarItem = UITabBarItem(title: "Update", image: #imageLiteral(resourceName: "TabBarUpdates")  , tag: 1)
+        settingsVC.tabBarItem = UITabBarItem(title: "Settings", image: #imageLiteral(resourceName: "TabBarSettings")  , tag: 2)
         
         let controllerList = [homeVC, UpdateVC, settingsVC]
-        //        viewControllers = controllerList
         viewControllers = controllerList.map { UINavigationController(rootViewController: $0) }
     }
     
