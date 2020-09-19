@@ -180,9 +180,10 @@ class HomeViewController: UIViewController {
         super.viewDidLoad()
         setupUserInterface()
         getStats()
-        LocationHandler.sharedInstance.updateUserLocation(uid: uid!)
+        if Auth.auth().currentUser?.uid != nil {
+            LocationHandler.sharedInstance.updateUserLocation(uid: uid!)
+        }
     }
-    
     
     func setupUserInterface() {
         navigationController?.navigationBar.topItem?.title = "Summary"
@@ -254,15 +255,4 @@ class HomeViewController: UIViewController {
         
         newsUpdateMessageLabel.setViewConstraints(top: newsUpdatesView.topAnchor, bottom: newsUpdatesView.bottomAnchor, left: newsUpdatesView.leftAnchor, right: newsUpdatesView.rightAnchor, marginTop: 40, marginBottom: 10, marginLeft: 10, marginRight: 10)
     }
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destination.
-     // Pass the selected object to the new view controller.
-     }
-     */
-    
 }

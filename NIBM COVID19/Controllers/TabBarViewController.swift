@@ -11,22 +11,11 @@ import Firebase
 
 class TabBarViewController: UITabBarController {
     
+    var handle: (Any)? = nil
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        checkUserAuthStatus()
-    }
-    
-    func checkUserAuthStatus(){
-        if Auth.auth().currentUser != nil {
-            setupUserInterface()
-        } else {
-            DispatchQueue.main.async {
-                let launchViewController = UINavigationController(rootViewController: LaunchViewController())
-                launchViewController.modalPresentationStyle = .fullScreen
-                self.present(launchViewController, animated: false, completion: nil)
-            }
-            
-        }
+        setupUserInterface()
     }
     
     func setupUserInterface() {

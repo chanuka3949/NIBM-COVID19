@@ -69,6 +69,27 @@ class LaunchViewController: UIViewController {
         navigationController?.pushViewController(signUpViewController, animated: true)
     }
     
+    private lazy var popViewControllerButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("╳", for: .normal)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 25)
+        button.setTitleColor(.black, for: .normal)
+        button.setTitleColor(UIColor(red: 166/255, green: 76/255, blue: 120/255, alpha: 1), for: .highlighted)
+        button.addTarget(self, action: #selector(popViewController), for: .touchUpInside)
+        return button
+    }()
+    
+    @objc func popViewController() {
+        if navigationController?.tabBarController?.selectedIndex == 1 {
+            navigationController?.tabBarController?.selectedIndex = 0
+            navigationController?.tabBarController?.tabBar.isHidden = false
+            navigationController?.popViewController(animated: true)
+        } else {
+            navigationController?.tabBarController?.tabBar.isHidden = false
+            navigationController?.popViewController(animated: true)
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUserInterface()
@@ -77,6 +98,10 @@ class LaunchViewController: UIViewController {
     func setupUserInterface() {
         view.backgroundColor = .white
         navigationController?.navigationBar.isHidden = true
+        navigationController?.tabBarController?.tabBar.isHidden = true
+        
+        view.addSubview(popViewControllerButton)
+        popViewControllerButton.setViewConstraints(top: view.safeAreaLayoutGuide.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor, marginTop: 20, marginLeft: 20)
         
         view.addSubview(logoImageView)
         logoImageView.setViewConstraints(top: view.safeAreaLayoutGuide.topAnchor, marginTop: 50, width: 150, height: 150)

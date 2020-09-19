@@ -93,6 +93,7 @@ class SignInViewController: UIViewController {
             
             guard let mainViewController = keyWindow?.rootViewController as? TabBarViewController else { return }
             mainViewController.setupUserInterface()
+            mainViewController.tabBar.isHidden = false
             self.dismiss(animated: true, completion: nil)
         }
     }
@@ -104,12 +105,11 @@ class SignInViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUserInterface()
-        
-        
     }
     
     func setupUserInterface() {
         navigationController?.navigationBar.isHidden = true
+        navigationController?.tabBarController?.tabBar.isHidden = true
         view.backgroundColor = .white
         
         view.addSubview(popViewControllerButton)
@@ -136,15 +136,4 @@ class SignInViewController: UIViewController {
         view.addSubview(needAnAccountButton)
         needAnAccountButton.setViewConstraints(top: signInButton.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 30, marginLeft: 20, marginRight: 20, height: 40)
     }
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destination.
-     // Pass the selected object to the new view controller.
-     }
-     */
-    
 }

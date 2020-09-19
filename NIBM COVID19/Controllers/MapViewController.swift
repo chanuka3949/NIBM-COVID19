@@ -40,6 +40,10 @@ class MapViewController: UIViewController {
         setupUserLocation()
         getNearbyUsers()
         removeDistancingUsers()
+        setupUserInterface()
+    }
+    
+    func setupUserInterface() {
         view.addSubview(statusView)
         statusView.setViewConstraints(bottom: view.safeAreaLayoutGuide.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginBottom: 5, marginLeft: 10, marginRight: 10, height: 50)
         statusView.addSubview(statusLabel)

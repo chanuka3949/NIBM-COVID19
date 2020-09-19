@@ -14,6 +14,7 @@ import LocalAuthentication
 class UpdateViewController: UIViewController {
     
     private let uid = Auth.auth().currentUser?.uid
+    private let databaseRef = Database.database().reference()
     private let spinner = UIActivityIndicatorView(style: .large)
     private let authContext = LAContext()
     private var error: NSError?
@@ -77,7 +78,7 @@ class UpdateViewController: UIViewController {
     }()
     
     func fetchUserTemperatureDate(uid: String) {
-        Database.database().reference().child(Constants.userHealth).child(uid).child(Constants.userTemperature).observe(.value, with: { [weak self] (snapshot) in
+        databaseRef.child(Constants.userHealth).child(uid).child(Constants.userTemperature).observe(.value, with: { [weak self] (snapshot) in
             let value = snapshot.value as? NSDictionary
             let formattedDate: DateFormatter = {
                 let date = DateFormatter()
@@ -110,7 +111,6 @@ class UpdateViewController: UIViewController {
     }
     
     @objc func takeSurvey() {
-        
         if authContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
             let reason = "You are trying to change personal data"
             authContext.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) {
@@ -156,13 +156,13 @@ class UpdateViewController: UIViewController {
             spinner.startAnimating()
             try context.save()
             let values = ["temperature": temp, "modifiedDate": Date().timeIntervalSince1970] as [String : Any]
-            Database.database().reference().child(Constants.userHealth).child(uid!).child(Constants.userTemperature).updateChildValues(values) { (error, ref) in
+            databaseRef.child(Constants.userHealth).child(uid!).child(Constants.userTemperature).updateChildValues(values) { (error, ref) in
                 if error != nil {
                     let alert = UIAlertController(title: "An error occurred", message: "Couldn't save temperature on database", preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
                     self.present(alert, animated: true)
                 }
-                Database.database().reference().child(Constants.userHealth).child(Constants.surveySummary).child(self.uid!).updateChildValues(["riskLevel":riskLevel]) { (error, ref) in
+                self.databaseRef.child(Constants.userHealth).child(Constants.surveySummary).child(self.uid!).updateChildValues(["riskLevel":riskLevel]) { (error, ref) in
                     if error != nil {
                         let alert = UIAlertController(title: "An error occurred", message: "Couldn't save survey summary on database", preferredStyle: .alert)
                         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
@@ -186,8 +186,24 @@ class UpdateViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
         setupUserInterface()
-        fetchUserTemperatureDate(uid: uid!)
+        if(Auth.auth().currentUser?.uid != nil) {
+            fetchUserTemperatureDate(uid: uid!)
+        } else {
+            let launchViewController = LaunchViewController()
+            self.navigationController?.pushViewController(launchViewController, animated: true)
+        }
+    }
+    
+    func getUserRole(uid: String, completion: @escaping(Role) -> Void) {
+        databaseRef.child(Constants.users).child(uid).observeSingleEvent(of: .value, with: {snapshot in
+            let value = snapshot.value as? NSDictionary
+            let role = value?["role"] as! Int
+            completion(Role(rawValue: role)!)
+        })
     }
     
     func calculateRiskLevelByTemp(uid: String, temperature: Float) -> Int16 {
@@ -224,20 +240,21 @@ class UpdateViewController: UIViewController {
         navigationController?.navigationBar.topItem?.title = "Updates"
         view.backgroundColor = UIColor(red: 244/255, green: 244/255, blue: 244/255, alpha: 1)
         
+        getUserRole(uid: uid!, completion: { [weak self] role in
+            if role.rawValue == 1 {
+                self!.createNewsItemButton.removeFromSuperview()
+                self!.surveyButton.setViewConstraints(top: self!.view.safeAreaLayoutGuide.topAnchor, left: self!.view.safeAreaLayoutGuide.leftAnchor , right: self!.view.safeAreaLayoutGuide.rightAnchor, marginTop: 10, marginBottom: 10, marginLeft: 10, marginRight: 10, height: 75)
+            }
+        })
         view.addSubview(createNewsItemButton)
-        createNewsItemButton.setViewConstraints(top: view.safeAreaLayoutGuide.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor , right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 10, marginBottom: 10, marginLeft: 10, marginRight: 10, height: 75)
-        
-        
         view.addSubview(surveyButton)
-        surveyButton.setViewConstraints(top: createNewsItemButton.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor , right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 10, marginBottom: 10, marginLeft: 10, marginRight: 10, height: 75)
-        
-        
-        view.addSubview(surveyButton)
-        
         view.addSubview(lastUpdatedTemperatureLabel)
         view.addSubview(lastUpdatedTemperatureDateLabel)
         view.addSubview(temperatureTextField)
         view.addSubview(updateTemperatureButton)
+        
+        createNewsItemButton.setViewConstraints(top: view.safeAreaLayoutGuide.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor , right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 10, marginBottom: 10, marginLeft: 10, marginRight: 10, height: 75)
+        surveyButton.setViewConstraints(top: createNewsItemButton.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor , right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 10, marginBottom: 10, marginLeft: 10, marginRight: 10, height: 75)
         
         lastUpdatedTemperatureLabel.setViewConstraints(top: surveyButton.bottomAnchor, marginTop: 20, marginBottom: 10, marginLeft: 10, marginRight: 10)
         lastUpdatedTemperatureLabel.centerX(view: view)
@@ -257,15 +274,4 @@ class UpdateViewController: UIViewController {
         spinner.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         spinner.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
     }
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destination.
-     // Pass the selected object to the new view controller.
-     }
-     */
-    
 }

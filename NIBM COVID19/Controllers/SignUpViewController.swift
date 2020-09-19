@@ -142,17 +142,13 @@ class SignUpViewController: UIViewController {
                 print("ERROR: Failed to register user \(error)")
                 return
             }
-            print("User registered successfully!")
-            
             guard let uid = result?.user.uid else { return }
             user.uid = uid
-            
             self.saveUserProfileData(user: user)
         }
     }
     
     func saveUserProfileData(user: User) {
-        
         let values = [
             "firstName": user.firstName!,
             "lastName": user.lastName!,
@@ -179,9 +175,11 @@ class SignUpViewController: UIViewController {
         
         guard let mainViewController = keyWindow?.rootViewController as? TabBarViewController else { return }
         mainViewController.setupUserInterface()
+        mainViewController.tabBar.isHidden = false
         mainViewController.selectedIndex = 0
         self.dismiss(animated: true, completion: nil)
     }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUserInterface()
@@ -191,6 +189,7 @@ class SignUpViewController: UIViewController {
     func setupUserInterface() {
         view.backgroundColor = .white
         navigationController?.navigationBar.isHidden = true
+        navigationController?.tabBarController?.tabBar.isHidden = true
         
         view.addSubview(popViewControllerButton)
         popViewControllerButton.setViewConstraints(top: view.safeAreaLayoutGuide.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor, marginTop: 20, marginLeft: 20)
@@ -219,14 +218,4 @@ class SignUpViewController: UIViewController {
         view.addSubview(alreadyHaveAnAccountButton)
         alreadyHaveAnAccountButton.setViewConstraints(top: termsOfAgreementLabel.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 20, marginLeft: 20, marginRight: 20, height: 40)
     }
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destination.
-     // Pass the selected object to the new view controller.
-     }
-     */
-    
 }
