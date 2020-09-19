@@ -101,7 +101,7 @@ class LaunchViewController: UIViewController {
         navigationController?.tabBarController?.tabBar.isHidden = true
         
         view.addSubview(popViewControllerButton)
-        popViewControllerButton.setViewConstraints(top: view.safeAreaLayoutGuide.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor, marginTop: 20, marginLeft: 20)
+        popViewControllerButton.setViewConstraints(top: view.safeAreaLayoutGuide.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor, marginTop: 10, marginLeft: 20)
         
         view.addSubview(logoImageView)
         logoImageView.setViewConstraints(top: view.safeAreaLayoutGuide.topAnchor, marginTop: 50, width: 150, height: 150)

@@ -15,7 +15,7 @@ class SignUpViewController: UIViewController {
     
     
     // MARK: - Properties
-    private var locationManager = LocationHandler.sharedInstance.locationManager
+    private let spinner = UIActivityIndicatorView(style: .large)
     
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
@@ -136,13 +136,17 @@ class SignUpViewController: UIViewController {
         let role = userRoleSegmentedControl.selectedSegmentIndex
         
         var user = User(email: email, firstName: firstName, lastName: lastName, password: password, role: role)
-        
+        spinner.startAnimating()
         Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
             if let error = error {
                 print("ERROR: Failed to register user \(error)")
+                self.spinner.stopAnimating()
                 return
             }
-            guard let uid = result?.user.uid else { return }
+            guard let uid = result?.user.uid else {
+                self.spinner.stopAnimating()
+                return
+            }
             user.uid = uid
             self.saveUserProfileData(user: user)
         }
@@ -158,8 +162,10 @@ class SignUpViewController: UIViewController {
         Database.database().reference().child(Constants.users).child(user.uid!).updateChildValues(values) { (error, ref) in
             if let error = error {
                 print("ERROR: Could not save user data to database \(error)")
+                self.spinner.stopAnimating()
                 return
             }
+            self.spinner.stopAnimating()
             print("Successfuly Registerd and Profile created")
             self.navigateToTabViewController()
         }
@@ -192,14 +198,14 @@ class SignUpViewController: UIViewController {
         navigationController?.tabBarController?.tabBar.isHidden = true
         
         view.addSubview(popViewControllerButton)
-        popViewControllerButton.setViewConstraints(top: view.safeAreaLayoutGuide.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor, marginTop: 20, marginLeft: 20)
-
+        popViewControllerButton.setViewConstraints(top: view.safeAreaLayoutGuide.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor, marginTop: 10, marginLeft: 20)
+        
         view.addSubview(titleLabel)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.centerXAnchor.constraint(equalTo:
             view.centerXAnchor).isActive = true
         titleLabel.topAnchor.constraint(equalTo: popViewControllerButton.bottomAnchor,
-                                        constant: 20).isActive = true
+                                        constant: 10).isActive = true
         
         let signUpStackView = UIStackView(arrangedSubviews: [firstNameTextField, lastNameTextField, emailTextField, userRoleSegmentedControl, passwordTextField])
         signUpStackView.axis = .vertical
@@ -217,5 +223,11 @@ class SignUpViewController: UIViewController {
         
         view.addSubview(alreadyHaveAnAccountButton)
         alreadyHaveAnAccountButton.setViewConstraints(top: termsOfAgreementLabel.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 20, marginLeft: 20, marginRight: 20, height: 40)
+        
+        spinner.translatesAutoresizingMaskIntoConstraints = false
+        spinner.color = .black
+        view.addSubview(spinner)
+        spinner.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        spinner.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
     }
 }

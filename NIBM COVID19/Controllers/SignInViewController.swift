@@ -12,6 +12,8 @@ import Firebase
 class SignInViewController: UIViewController {
     
     // MARK: - Properties
+    private let spinner = UIActivityIndicatorView(style: .large)
+    
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.text = "Sign In with Email"
@@ -78,12 +80,14 @@ class SignInViewController: UIViewController {
     @objc func handleSignIn() {
         guard let email = emailTextField.text else { return }
         guard let password = passwordTextField.text else { return }
-        
+        spinner.startAnimating()
         Auth.auth().signIn(withEmail: email, password: password) { (result, error) in
             if let error = error {
                 print("Failed to login user with error \(error)")
+                self.spinner.stopAnimating()
                 return
             }
+            self.spinner.stopAnimating()
             let keyWindow = UIApplication.shared.connectedScenes
                 .filter({$0.activationState == .foregroundActive})
                 .map({$0 as? UIWindowScene})
@@ -113,14 +117,14 @@ class SignInViewController: UIViewController {
         view.backgroundColor = .white
         
         view.addSubview(popViewControllerButton)
-        popViewControllerButton.setViewConstraints(top: view.safeAreaLayoutGuide.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor, marginTop: 20, marginLeft: 20)
+        popViewControllerButton.setViewConstraints(top: view.safeAreaLayoutGuide.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor, marginTop: 10, marginLeft: 20)
         
         view.addSubview(titleLabel)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.centerXAnchor.constraint(equalTo:
             view.centerXAnchor).isActive = true
         titleLabel.topAnchor.constraint(equalTo: popViewControllerButton.bottomAnchor,
-                                        constant: 20).isActive = true
+                                        constant: 10).isActive = true
         
         let signInStackView = UIStackView(arrangedSubviews: [emailTextField, passwordTextField])
         signInStackView.axis = .vertical
@@ -135,5 +139,11 @@ class SignInViewController: UIViewController {
         
         view.addSubview(needAnAccountButton)
         needAnAccountButton.setViewConstraints(top: signInButton.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 30, marginLeft: 20, marginRight: 20, height: 40)
+        
+        spinner.translatesAutoresizingMaskIntoConstraints = false
+        spinner.color = .black
+        view.addSubview(spinner)
+        spinner.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        spinner.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
     }
 }

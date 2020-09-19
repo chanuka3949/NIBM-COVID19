@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		014AC26D9F0E23A55A1008EB /* Pods_NIBM_COVID19.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23F0159ADEEAA5FF4B68DB4C /* Pods_NIBM_COVID19.framework */; };
 		310CD3952515BC33000DF684 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310CD3942515BC33000DF684 /* User.swift */; };
+		310CD39D25167204000DF684 /* AuthenticationProcessTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310CD39C25167204000DF684 /* AuthenticationProcessTests.swift */; };
 		3112F9C924EDBF28004A3BA0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3112F9C824EDBF28004A3BA0 /* AppDelegate.swift */; };
 		3112F9CB24EDBF28004A3BA0 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3112F9CA24EDBF28004A3BA0 /* SceneDelegate.swift */; };
 		3112F9CD24EDBF28004A3BA0 /* LaunchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3112F9CC24EDBF28004A3BA0 /* LaunchViewController.swift */; };
@@ -43,6 +44,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		310CD39F25167204000DF684 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3112F9BD24EDBF28004A3BA0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3112F9C424EDBF28004A3BA0;
+			remoteInfo = "NIBM COVID19";
+		};
 		3112F9DF24EDBF29004A3BA0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3112F9BD24EDBF28004A3BA0 /* Project object */;
@@ -63,6 +71,9 @@
 		23F0159ADEEAA5FF4B68DB4C /* Pods_NIBM_COVID19.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NIBM_COVID19.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E8F732ED66E790B1925DF9A /* Pods-NIBM COVID19Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NIBM COVID19Tests.release.xcconfig"; path = "Target Support Files/Pods-NIBM COVID19Tests/Pods-NIBM COVID19Tests.release.xcconfig"; sourceTree = "<group>"; };
 		310CD3942515BC33000DF684 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		310CD39A25167204000DF684 /* AuthenticationProcessTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AuthenticationProcessTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		310CD39C25167204000DF684 /* AuthenticationProcessTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationProcessTests.swift; sourceTree = "<group>"; };
+		310CD39E25167204000DF684 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3112F9C524EDBF28004A3BA0 /* NIBM COVID19.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "NIBM COVID19.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3112F9C824EDBF28004A3BA0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3112F9CA24EDBF28004A3BA0 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -106,6 +117,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		310CD39725167204000DF684 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3112F9C224EDBF28004A3BA0 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -133,12 +151,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		310CD39B25167204000DF684 /* AuthenticationProcessTests */ = {
+			isa = PBXGroup;
+			children = (
+				310CD39C25167204000DF684 /* AuthenticationProcessTests.swift */,
+				310CD39E25167204000DF684 /* Info.plist */,
+			);
+			path = AuthenticationProcessTests;
+			sourceTree = "<group>";
+		};
 		3112F9BC24EDBF28004A3BA0 = {
 			isa = PBXGroup;
 			children = (
 				3112F9C724EDBF28004A3BA0 /* NIBM COVID19 */,
 				3112F9E124EDBF29004A3BA0 /* NIBM COVID19Tests */,
 				3112F9EC24EDBF29004A3BA0 /* NIBM COVID19UITests */,
+				310CD39B25167204000DF684 /* AuthenticationProcessTests */,
 				3112F9C624EDBF28004A3BA0 /* Products */,
 				6D0F3CC59A2CB7828F1A0311 /* Pods */,
 				8651D3ABDDB04BBF0B19B74B /* Frameworks */,
@@ -151,6 +179,7 @@
 				3112F9C524EDBF28004A3BA0 /* NIBM COVID19.app */,
 				3112F9DE24EDBF29004A3BA0 /* NIBM COVID19Tests.xctest */,
 				3112F9E924EDBF29004A3BA0 /* NIBM COVID19UITests.xctest */,
+				310CD39A25167204000DF684 /* AuthenticationProcessTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -265,6 +294,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		310CD39925167204000DF684 /* AuthenticationProcessTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 310CD3A325167204000DF684 /* Build configuration list for PBXNativeTarget "AuthenticationProcessTests" */;
+			buildPhases = (
+				310CD39625167204000DF684 /* Sources */,
+				310CD39725167204000DF684 /* Frameworks */,
+				310CD39825167204000DF684 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				310CD3A025167204000DF684 /* PBXTargetDependency */,
+			);
+			name = AuthenticationProcessTests;
+			productName = AuthenticationProcessTests;
+			productReference = 310CD39A25167204000DF684 /* AuthenticationProcessTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		3112F9C424EDBF28004A3BA0 /* NIBM COVID19 */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3112F9F224EDBF29004A3BA0 /* Build configuration list for PBXNativeTarget "NIBM COVID19" */;
@@ -333,6 +380,10 @@
 				LastUpgradeCheck = 1150;
 				ORGANIZATIONNAME = NIBM;
 				TargetAttributes = {
+					310CD39925167204000DF684 = {
+						CreatedOnToolsVersion = 11.5;
+						TestTargetID = 3112F9C424EDBF28004A3BA0;
+					};
 					3112F9C424EDBF28004A3BA0 = {
 						CreatedOnToolsVersion = 11.5;
 					};
@@ -362,11 +413,19 @@
 				3112F9C424EDBF28004A3BA0 /* NIBM COVID19 */,
 				3112F9DD24EDBF29004A3BA0 /* NIBM COVID19Tests */,
 				3112F9E824EDBF29004A3BA0 /* NIBM COVID19UITests */,
+				310CD39925167204000DF684 /* AuthenticationProcessTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		310CD39825167204000DF684 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3112F9C324EDBF28004A3BA0 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -499,6 +558,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		310CD39625167204000DF684 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				310CD39D25167204000DF684 /* AuthenticationProcessTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3112F9C124EDBF28004A3BA0 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -548,6 +615,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		310CD3A025167204000DF684 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3112F9C424EDBF28004A3BA0 /* NIBM COVID19 */;
+			targetProxy = 310CD39F25167204000DF684 /* PBXContainerItemProxy */;
+		};
 		3112F9E024EDBF29004A3BA0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 3112F9C424EDBF28004A3BA0 /* NIBM COVID19 */;
@@ -572,6 +644,44 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		310CD3A125167204000DF684 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = AuthenticationProcessTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.nibm.cobsccomp191p-009.AuthenticationProcessTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NIBM COVID19.app/NIBM COVID19";
+			};
+			name = Debug;
+		};
+		310CD3A225167204000DF684 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = AuthenticationProcessTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.nibm.cobsccomp191p-009.AuthenticationProcessTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NIBM COVID19.app/NIBM COVID19";
+			};
+			name = Release;
+		};
 		3112F9F024EDBF29004A3BA0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -809,6 +919,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		310CD3A325167204000DF684 /* Build configuration list for PBXNativeTarget "AuthenticationProcessTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				310CD3A125167204000DF684 /* Debug */,
+				310CD3A225167204000DF684 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		3112F9C024EDBF28004A3BA0 /* Build configuration list for PBXProject "NIBM COVID19" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

@@ -176,9 +176,10 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
     }
     
     public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        picker.dismiss(animated: true, completion: nil)
-        guard let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage else { return }
-        userImageView.image = image
+        picker.dismiss(animated: true, completion: {
+            guard let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage else { return }
+            self.userImageView.image = image
+        }) 
     }
     
     func uploadPhoto(data: Data, completion: @escaping(Bool, URL) -> Void) {

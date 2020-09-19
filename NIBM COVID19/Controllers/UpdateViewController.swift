@@ -240,12 +240,15 @@ class UpdateViewController: UIViewController {
         navigationController?.navigationBar.topItem?.title = "Updates"
         view.backgroundColor = UIColor(red: 244/255, green: 244/255, blue: 244/255, alpha: 1)
         
-        getUserRole(uid: uid!, completion: { [weak self] role in
-            if role.rawValue == 1 {
-                self!.createNewsItemButton.removeFromSuperview()
-                self!.surveyButton.setViewConstraints(top: self!.view.safeAreaLayoutGuide.topAnchor, left: self!.view.safeAreaLayoutGuide.leftAnchor , right: self!.view.safeAreaLayoutGuide.rightAnchor, marginTop: 10, marginBottom: 10, marginLeft: 10, marginRight: 10, height: 75)
-            }
-        })
+        if(Auth.auth().currentUser?.uid != nil) {
+            getUserRole(uid: uid!, completion: { [weak self] role in
+                if role.rawValue == 1 {
+                    self!.createNewsItemButton.removeFromSuperview()
+                    self!.surveyButton.setViewConstraints(top: self!.view.safeAreaLayoutGuide.topAnchor, left: self!.view.safeAreaLayoutGuide.leftAnchor , right: self!.view.safeAreaLayoutGuide.rightAnchor, marginTop: 10, marginBottom: 10, marginLeft: 10, marginRight: 10, height: 75)
+                }
+            })
+        }
+        
         view.addSubview(createNewsItemButton)
         view.addSubview(surveyButton)
         view.addSubview(lastUpdatedTemperatureLabel)
