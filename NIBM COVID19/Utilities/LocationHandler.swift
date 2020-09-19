@@ -13,7 +13,7 @@ class LocationHandler: NSObject, CLLocationManagerDelegate {
     
     static let sharedInstance = LocationHandler()
     
-    
+    let databaseRef = Database.database().reference()
     var locationManager: CLLocationManager!
     var location: CLLocation?
     
@@ -48,7 +48,7 @@ class LocationHandler: NSObject, CLLocationManagerDelegate {
     }
     
     func getNearbyUserLocations(location: CLLocation, completion: @escaping(String, CLLocation) -> Void) {
-        let geofireRef = DatabaseService.databaseReference.child(Constants.userLocations)
+        let geofireRef = databaseRef.child(Constants.userLocations)
         let geoFire = GeoFire(firebaseRef: geofireRef)
         geofireRef.observe(.value) { (snapshot) in
             geoFire.query(at: location, withRadius: 50).observe(.keyEntered, with: { (uid, location) in
@@ -60,7 +60,7 @@ class LocationHandler: NSObject, CLLocationManagerDelegate {
     }
     
     func getDistancingUserLocations(location: CLLocation, completion: @escaping(String, CLLocation) -> Void) {
-        let geofireRef = DatabaseService.databaseReference.child(Constants.userLocations)
+        let geofireRef = databaseRef.child(Constants.userLocations)
         let geoFire = GeoFire(firebaseRef: geofireRef)
         geofireRef.observe(.value) { (snapshot) in
             geoFire.query(at: location, withRadius: 50).observe(.keyExited, with: { (uid, location) in
@@ -72,7 +72,7 @@ class LocationHandler: NSObject, CLLocationManagerDelegate {
     }
     
     func updateUserLocation(uid: String) {
-        let geofireRef = DatabaseService.databaseReference.child(Constants.userLocations)
+        let geofireRef = databaseRef.child(Constants.userLocations)
         let geoFire = GeoFire(firebaseRef: geofireRef)
         
         guard let location = self.locationManager?.location else { return }

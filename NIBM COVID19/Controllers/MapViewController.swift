@@ -22,6 +22,7 @@ class MapViewController: UIViewController {
     private let statusLabel: UILabel = {
         let label = UILabel()
         label.text = ""
+        label.numberOfLines = 0
         label.textAlignment = .center
         label.textColor = .black
         return label
@@ -45,27 +46,46 @@ class MapViewController: UIViewController {
         statusLabel.setViewConstraints(top: statusView.topAnchor, bottom: statusView.bottomAnchor, left: statusView.leftAnchor, right: statusView.rightAnchor, marginTop: 5, marginBottom: 5, marginLeft: 5, marginRight: 5)
     }
     
-    func updateSurroundingStatus(riskLevel: Int, userEnteredArea: Bool) {
-        switch riskLevel {
-        case 5:
-            highRiskUsers += 1
-        case 4:
-            highRiskUsers += 1
-        case 3:
-            mediumRiskUsers += 1
-        case 2:
-            mediumRiskUsers += 1
-        case 1:
-            lowRiskUsers += 0
-        case 0:
-            lowRiskUsers += 0
-        default:
-            break
+    func updateSurroundingStatus(prevRiskLevel: Int?, currentRiskLevel: Int, annotationStatus: userAnnotationStatus) {
+        
+        switch annotationStatus {
+        case .userAdded:
+            if currentRiskLevel > 3 {
+                highRiskUsers += 1
+            } else if currentRiskLevel > 1 {
+                mediumRiskUsers += 1
+            } else {
+                lowRiskUsers += 1
+            }
+        case .userChanged:
+            if currentRiskLevel > 3 {
+                highRiskUsers += 1
+            } else if currentRiskLevel > 1 {
+                mediumRiskUsers += 1
+            } else {
+                lowRiskUsers += 1
+            }
+            if prevRiskLevel! > 3 {
+                highRiskUsers -= 1
+            } else if prevRiskLevel! > 1 {
+                mediumRiskUsers -= 1
+            } else {
+                lowRiskUsers -= 1
+            }
+        case .userRemoved:
+            if currentRiskLevel > 3 {
+                highRiskUsers += 1
+            } else if currentRiskLevel > 1 {
+                mediumRiskUsers += 1
+            } else {
+                lowRiskUsers += 1
+            }
         }
+        
         if highRiskUsers > 0 {
-            updateStatusBar(status: "High risk area. Please move away from this area", color: .systemRed)
+            updateStatusBar(status: "High risk area. Please move away", color: .systemRed)
         } else if mediumRiskUsers > 0 {
-            updateStatusBar(status: "Be cautions. People might be infected", color: .systemYellow)
+            updateStatusBar(status: "Be cautious. People might be infected", color: .systemYellow)
         } else {
             updateStatusBar(status: "This is a safe area", color: .systemGreen)
         }
@@ -102,7 +122,7 @@ class MapViewController: UIViewController {
                 guard let userAnnotation = userAnnotation as? UserAnnotation else {return false}
                 if userAnnotation.uid == userId {
                     self?.mapView.removeAnnotation(userAnnotation)
-                    self?.updateSurroundingStatus(riskLevel: userAnnotation.riskLevel, userEnteredArea: false)
+                    self?.updateSurroundingStatus(prevRiskLevel: nil, currentRiskLevel: userAnnotation.riskLevel, annotationStatus: userAnnotationStatus.userRemoved)
                     return true
                 }
                 return false
@@ -144,7 +164,7 @@ class MapViewController: UIViewController {
                             if userAnnotation.color != annotation.color {
                                 self?.mapView.removeAnnotation(userAnnotation)
                                 self?.mapView.addAnnotation(annotation)
-                                self?.updateSurroundingStatus(riskLevel: riskLevel, userEnteredArea: true)
+                                self?.updateSurroundingStatus(prevRiskLevel: userAnnotation.riskLevel, currentRiskLevel: annotation.riskLevel, annotationStatus: userAnnotationStatus.userChanged )
                             }
                             return true
                         }
@@ -153,7 +173,7 @@ class MapViewController: UIViewController {
                 }
                 if !(userAlreadyVisible ?? true) {
                     self?.mapView.addAnnotation(annotation)
-                    self?.updateSurroundingStatus(riskLevel: riskLevel, userEnteredArea: true)
+                    self?.updateSurroundingStatus(prevRiskLevel: nil, currentRiskLevel: riskLevel, annotationStatus: userAnnotationStatus.userAdded)
                 }
             })
         }

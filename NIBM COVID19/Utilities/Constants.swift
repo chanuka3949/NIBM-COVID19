@@ -20,3 +20,6 @@ struct Constants {
     static let redUserImage = "RedUserImage"
     static let surveySummary = "survey-summary"
 }
+enum userAnnotationStatus {
+    case userAdded, userChanged, userRemoved
+}

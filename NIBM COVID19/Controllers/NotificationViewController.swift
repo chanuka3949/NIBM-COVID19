@@ -12,6 +12,7 @@ import Firebase
 class NotificationViewController: UIViewController {
     
     private var newsUpdates: [String] = []
+    private var databaseRef = Database.database().reference()
     
     private var newsUpdatesTableView: UITableView = {
         let tableView = UITableView()
@@ -21,7 +22,7 @@ class NotificationViewController: UIViewController {
     
     
     func fetchNewsUpdates() {
-        DatabaseService.databaseReference.child(Constants.newsUpdates).observe(.childAdded, with: { [weak self] (snapshot) -> Void in
+        databaseRef.child(Constants.newsUpdates).observe(.childAdded, with: { [weak self] (snapshot) -> Void in
             let value = snapshot.childSnapshot(forPath: "news").value
             let comment: String = value as! String
             self!.newsUpdates.append(comment)
