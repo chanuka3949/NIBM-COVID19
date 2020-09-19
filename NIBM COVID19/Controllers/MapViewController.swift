@@ -13,6 +13,7 @@ import Firebase
 class MapViewController: UIViewController {
     private lazy var mapView = MKMapView()
     private var locationManager = LocationHandler.sharedInstance.locationManager
+    private let currentUser = Auth.auth().currentUser?.uid
     override func viewDidLoad() {
         super.viewDidLoad()
         LocationHandler.sharedInstance.getLocationServicePermission()
@@ -34,7 +35,6 @@ class MapViewController: UIViewController {
     func getUserRiskLevels(uid: String, completion: @escaping(Int) -> Void) {
         var riskLevel = 0
         Database.database().reference().child(Constants.userHealth).child(Constants.surveySummary).child(uid).observe(.childAdded, with: { (snapshot) -> Void in
-            
             riskLevel = snapshot.value as! Int
             completion(riskLevel)
         })
@@ -43,6 +43,10 @@ class MapViewController: UIViewController {
     func getNearbyUsers() {
         guard let location = locationManager?.location else {return}
         LocationHandler.sharedInstance.getNearbyUserLocations(location: location) {[weak self] (uid, location) in
+            if (uid == self?.currentUser) {
+                print("Current user")
+                return
+            }
             self?.getUserRiskLevels(uid: uid, completion: {(riskLevel) in
                 var color: UIColor = .systemBlue
                 switch riskLevel {
@@ -58,10 +62,11 @@ class MapViewController: UIViewController {
                     color = .green
                 case 0:
                     color = .green
-                default: break
+                default:
+                    break
                 }
                 let annotation = UserAnnotation(uid: uid, coordinate: location.coordinate, color: color)
-                var userAlreadyVisible: Bool {
+                var userAlreadyVisible: Bool? {
                     return (self?.mapView.annotations.contains { (userAnnotation) -> Bool in
                         guard let userAnnotation = userAnnotation as? UserAnnotation else {return false}
                         if userAnnotation.uid == annotation.uid {
@@ -71,9 +76,9 @@ class MapViewController: UIViewController {
                             return true
                         }
                         return false
-                        })!
+                        })
                 }
-                if !userAlreadyVisible {
+                if !(userAlreadyVisible ?? true) {
                     print("DEBUG: User annotation added to map \(annotation.uid)")
                     self?.mapView.addAnnotation(annotation)
                 }

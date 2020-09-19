@@ -52,7 +52,7 @@ class LocationHandler: NSObject, CLLocationManagerDelegate {
         let geoFire = GeoFire(firebaseRef: geofireRef)
         geofireRef.observe(.value) { (snapshot) in
             geoFire.query(at: location, withRadius: 50).observe(.keyEntered, with: { (uid, location) in
-                print("DEBUG: User added to map")
+                print("DEBUG: User Data retrieved")
                 completion(uid, location)
             }
             )

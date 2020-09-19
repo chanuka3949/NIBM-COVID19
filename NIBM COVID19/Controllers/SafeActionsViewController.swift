@@ -13,11 +13,12 @@ class SafeActionsViewController: UIViewController {
     // MARK: - Properties
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // Do any additional setup after loading the view.
+        setupUserInterface()
     }
     
-    
+    func setupUserInterface() {
+        view.backgroundColor = .white
+    }
     /*
      // MARK: - Navigation
      

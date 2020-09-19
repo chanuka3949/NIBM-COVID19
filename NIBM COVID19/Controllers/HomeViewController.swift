@@ -47,7 +47,7 @@ class HomeViewController: UIViewController {
         firstString.append(secondString)
         button.setAttributedTitle(firstString, for: .normal)
         button.contentHorizontalAlignment = .left
-        
+        button.addTarget(self, action: #selector(viewSafetyActions), for: .touchUpInside)
         return button
     }()
     
@@ -103,6 +103,11 @@ class HomeViewController: UIViewController {
     @objc func viewNotifications() {
         let notificationViewController = NotificationViewController()
         navigationController?.pushViewController(notificationViewController, animated: true)
+    }
+    
+    @objc func viewSafetyActions() {
+        let safetyActionsViewController = SafeActionsViewController()
+        navigationController?.pushViewController(safetyActionsViewController, animated: true)
     }
     
     private lazy var universityCaseUpdatelabel: UILabel = {
@@ -215,8 +220,6 @@ class HomeViewController: UIViewController {
         
         stayHomelabel.setViewConstraints(top: safetyActionView.topAnchor, left: safetyActionView.leftAnchor, right: safetyActionView.rightAnchor, marginTop: 30, marginBottom: 5, marginLeft: 5, marginRight: 5)
         safeActionsButton.setViewConstraints(top: stayHomelabel.bottomAnchor, left: safetyActionView.leftAnchor, right: safetyActionView.rightAnchor, marginTop: 5, marginBottom: 5, marginLeft: 5, marginRight: 5)
-        
-        
         
         let summaryView: UIView = {
             let view = UIView()

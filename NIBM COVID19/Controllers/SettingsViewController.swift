@@ -27,12 +27,13 @@ class SettingsViewController: UIViewController {
         return button
     }()
     
-    let contactUsButton: UIButton = {
+    let aboutUs: UIButton = {
         let button = UIButton()
         button.setTitle("Contact Us", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.setTitleColor(.systemBlue, for: .highlighted)
         button.contentHorizontalAlignment = .left
+        button.addTarget(self, action: #selector(goToAboutUs), for: .touchUpInside)
         return button
     }()
     
@@ -58,7 +59,6 @@ class SettingsViewController: UIViewController {
         navigationController?.navigationBar.topItem?.title = "Settings"
         view.backgroundColor = .white
         setupUserInterface()
-        // Do any additional setup after loading the view.
     }
     
     @objc func handleSignOut()  {
@@ -77,6 +77,11 @@ class SettingsViewController: UIViewController {
         navigationController?.pushViewController(profileViewController, animated: true)
     }
     
+    @objc func goToAboutUs() {
+        let aboutUsViewController = AboutUsViewController()
+        navigationController?.pushViewController(aboutUsViewController, animated: true)
+    }
+    
     func setupUserInterface() {
         view.addSubview(profileButton)
         profileButton.setViewConstraints(top: view.safeAreaLayoutGuide.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 20, marginLeft: 20, height: 40)
@@ -84,8 +89,8 @@ class SettingsViewController: UIViewController {
         view.addSubview(seperatorView)
         seperatorView.setViewConstraints(top: profileButton.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 10, marginLeft: 20, marginRight: 20)
         
-        view.addSubview(contactUsButton)
-        contactUsButton.setViewConstraints(top: seperatorView.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 10, marginLeft: 20, height: 40)
+        view.addSubview(aboutUs)
+        aboutUs.setViewConstraints(top: seperatorView.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 10, marginLeft: 20, height: 40)
         
         view.addSubview(signOutButton)
         signOutButton.setViewConstraints(bottom: view.safeAreaLayoutGuide.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 10, marginBottom: 10, marginLeft: 10, marginRight: 10)
