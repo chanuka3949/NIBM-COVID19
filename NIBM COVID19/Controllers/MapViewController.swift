@@ -21,7 +21,7 @@ class MapViewController: UIViewController {
     
     private let statusLabel: UILabel = {
         let label = UILabel()
-        label.text = ""
+        label.text = "No one is around you"
         label.numberOfLines = 0
         label.textAlignment = .center
         label.textColor = .black

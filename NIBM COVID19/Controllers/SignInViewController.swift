@@ -91,8 +91,8 @@ class SignInViewController: UIViewController {
         }
         
         spinner.startAnimating()
-        signInUser(email: emailTextField.text!, password: passwordTextField.text!) {isSuccessful in
-            self.spinner.stopAnimating()
+        signInUser(email: emailTextField.text!, password: passwordTextField.text!) { [weak self] isSuccessful in
+            self?.spinner.stopAnimating()
             if isSuccessful {
                 let keyWindow = UIApplication.shared.connectedScenes
                     .filter({$0.activationState == .foregroundActive})
@@ -104,9 +104,9 @@ class SignInViewController: UIViewController {
                 guard let mainViewController = keyWindow?.rootViewController as? TabBarViewController else { return }
                 mainViewController.setupUserInterface()
                 mainViewController.tabBar.isHidden = false
-                self.dismiss(animated: true, completion: nil)
+                self?.dismiss(animated: true, completion: nil)
             } else {
-                self.presentAlert(title: "Error", message: "Login failed", actionTitle: "OK", currentVC: self)
+                self?.presentAlert(title: "Error", message: "Login failed", actionTitle: "OK", currentVC: self!)
             }
         }
     }

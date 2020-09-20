@@ -193,14 +193,14 @@ class SignUpViewController: UIViewController {
             "role": user.role!
             ] as [String : Any]
         spinner.startAnimating()
-        Database.database().reference().child(Constants.users).child(user.uid!).updateChildValues(values) { (error, ref) in
+        Database.database().reference().child(Constants.users).child(user.uid!).updateChildValues(values) { [weak self] (error, ref) in
             if let error = error {
                 print("ERROR: Could not save user data to database \(error)")
-                self.presentAlert(title: "Error", message: "An error occurred while saving user data. Please update your data in the profile", actionTitle: "OK", currentVC: self)
+                self?.presentAlert(title: "Error", message: "An error occurred while saving user data. Please update your data in the profile", actionTitle: "OK", currentVC: self!)
             }
-            self.spinner.stopAnimating()
+            self?.spinner.stopAnimating()
             print("Successfuly Registerd and Profile created")
-            self.navigateToTabViewController()
+            self?.navigateToTabViewController()
         }
     }
     
