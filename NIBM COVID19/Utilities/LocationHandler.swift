@@ -8,6 +8,7 @@
 
 import CoreLocation
 import GeoFire
+import Firebase
 
 class LocationHandler: NSObject, CLLocationManagerDelegate {
     
@@ -16,6 +17,7 @@ class LocationHandler: NSObject, CLLocationManagerDelegate {
     let databaseRef = Database.database().reference()
     var locationManager: CLLocationManager!
     var location: CLLocation?
+    var currentUser = Auth.auth().currentUser?.uid
     
     private override init() {
         super.init()
@@ -36,11 +38,12 @@ class LocationHandler: NSObject, CLLocationManagerDelegate {
             locationManager?.requestWhenInUseAuthorization()
         case .authorizedWhenInUse:
             locationManager?.requestAlwaysAuthorization()
+            locationManager?.startUpdatingLocation()
+            locationManager?.desiredAccuracy = kCLLocationAccuracyBest
         case .authorizedAlways:
             locationManager?.startUpdatingLocation()
             locationManager?.desiredAccuracy = kCLLocationAccuracyBest
         case .restricted, .denied:
-            //give the option to take the user to settings page to allow access
             break
         default:
             break
@@ -83,6 +86,12 @@ class LocationHandler: NSObject, CLLocationManagerDelegate {
                 return
             }
             print("User Location Updated")
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if currentUser != nil {
+            updateUserLocation(uid: currentUser!)
         }
     }
 }
