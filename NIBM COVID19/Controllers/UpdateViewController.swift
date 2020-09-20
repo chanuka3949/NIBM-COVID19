@@ -183,6 +183,7 @@ class UpdateViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = UIColor(red: 244/255, green: 244/255, blue: 244/255, alpha: 1)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -198,7 +199,7 @@ class UpdateViewController: UIViewController {
     func getUserRole(uid: String, completion: @escaping(Role) -> Void) {
         databaseRef.child(Constants.users).child(uid).observeSingleEvent(of: .value, with: {snapshot in
             let value = snapshot.value as? NSDictionary
-            let role = value?["role"] as! Int
+            let role = value?["role"] as? Int ?? 0
             completion(Role(rawValue: role)!)
         })
     }
@@ -235,7 +236,16 @@ class UpdateViewController: UIViewController {
     
     func setupUserInterface() {
         navigationController?.navigationBar.topItem?.title = "Updates"
-        view.backgroundColor = UIColor(red: 244/255, green: 244/255, blue: 244/255, alpha: 1)
+        view.backgroundColor = UIColor(red: 225/255, green: 225/255, blue: 225/255, alpha: 1)
+        
+        view.addSubview(createNewsItemButton)
+        view.addSubview(surveyButton)
+        view.addSubview(lastUpdatedTemperatureLabel)
+        view.addSubview(lastUpdatedTemperatureDateLabel)
+        view.addSubview(temperatureTextField)
+        view.addSubview(updateTemperatureButton)
+        
+        createNewsItemButton.setViewConstraints(top: view.safeAreaLayoutGuide.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor , right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 10, marginBottom: 10, marginLeft: 10, marginRight: 10, height: 75)
         
         if(Auth.auth().currentUser?.uid != nil) {
             getUserRole(uid: uid!, completion: { [weak self] role in
@@ -246,14 +256,6 @@ class UpdateViewController: UIViewController {
             })
         }
         
-        view.addSubview(createNewsItemButton)
-        view.addSubview(surveyButton)
-        view.addSubview(lastUpdatedTemperatureLabel)
-        view.addSubview(lastUpdatedTemperatureDateLabel)
-        view.addSubview(temperatureTextField)
-        view.addSubview(updateTemperatureButton)
-        
-        createNewsItemButton.setViewConstraints(top: view.safeAreaLayoutGuide.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor , right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 10, marginBottom: 10, marginLeft: 10, marginRight: 10, height: 75)
         surveyButton.setViewConstraints(top: createNewsItemButton.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor , right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 10, marginBottom: 10, marginLeft: 10, marginRight: 10, height: 75)
         
         lastUpdatedTemperatureLabel.setViewConstraints(top: surveyButton.bottomAnchor, marginTop: 20, marginBottom: 10, marginLeft: 10, marginRight: 10)

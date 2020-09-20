@@ -32,9 +32,9 @@ class HomeViewController: UIViewController {
     
     private lazy var logoImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 20
-        imageView.image = UIImage(named: "Logo")
+        imageView.image = UIImage(named: "HomeLogo")
         return imageView
     }()
     
@@ -160,19 +160,6 @@ class HomeViewController: UIViewController {
             let newsVal = "\(snapshot.childSnapshot(forPath: "news").value!) \n\n"
             news.append(contentsOf: newsVal)
             self.newsUpdateMessageLabel.text = news
-            //            if snapshot.childrenCount == 0 {
-            //                self.newsUpdateMessageLabel.text = "No News Updates"
-            //                self.newsUpdateMessageLabel.textAlignment = .center
-            //                return
-            //            }
-            //            news = ""
-            //
-            //            for child in snapshot.children{
-            //                let value:DataSnapshot = child as! DataSnapshot
-            //                let newsVal = "\(value.childSnapshot(forPath: "news").value as! String) \n\n"
-            //                news.append(contentsOf: newsVal)
-            //            }
-            //            self.newsUpdateMessageLabel.text = news
         })
         
     }
@@ -187,26 +174,26 @@ class HomeViewController: UIViewController {
     
     func setupUserInterface() {
         navigationController?.navigationBar.topItem?.title = "Summary"
-        view.backgroundColor = UIColor(red: 244/255, green: 244/255, blue: 244/255, alpha: 1)
+        view.backgroundColor = UIColor(red: 225/255, green: 225/255, blue: 225/255, alpha: 1)
         
         let safetyActionView: UIView = {
             let view = UIView()
             view.layer.cornerRadius = 10
-            view.backgroundColor = UIColor(red: 244/255, green: 244/255, blue: 244/255, alpha: 1)
+            view.backgroundColor = UIColor(red: 225/255, green: 225/255, blue: 225/255, alpha: 1)
             return view
         }()
         view.addSubview(logoImageView)
         
-        logoImageView.setViewConstraints(top: view.safeAreaLayoutGuide.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor, marginTop: 5, marginBottom: 5, marginLeft: 5, marginRight: 5, width: view.frame.size.width / 2, height: 150)
+        logoImageView.setViewConstraints(top: view.safeAreaLayoutGuide.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor, marginTop: 10, marginBottom: 10, marginLeft: 10, marginRight: 10, width: view.frame.size.width / 2, height: 200)
         
         view.addSubview(safetyActionView)
-        safetyActionView.setViewConstraints(top: view.safeAreaLayoutGuide.topAnchor, left: logoImageView.rightAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 5, marginBottom: 5, marginLeft: 5, marginRight: 5, height: 150)
+        safetyActionView.setViewConstraints(top: view.safeAreaLayoutGuide.topAnchor, left: logoImageView.rightAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 10, marginBottom: 10, marginLeft: 10, marginRight: 10, height: 200)
         
         safetyActionView.addSubview(stayHomelabel)
         safetyActionView.addSubview(safeActionsButton)
         
-        stayHomelabel.setViewConstraints(top: safetyActionView.topAnchor, left: safetyActionView.leftAnchor, right: safetyActionView.rightAnchor, marginTop: 30, marginBottom: 5, marginLeft: 5, marginRight: 5)
-        safeActionsButton.setViewConstraints(top: stayHomelabel.bottomAnchor, left: safetyActionView.leftAnchor, right: safetyActionView.rightAnchor, marginTop: 5, marginBottom: 5, marginLeft: 5, marginRight: 5)
+        stayHomelabel.setViewConstraints(top: safetyActionView.topAnchor, left: safetyActionView.leftAnchor, right: safetyActionView.rightAnchor, marginTop: 30, marginBottom: 5, marginLeft: 30, marginRight: 5)
+        safeActionsButton.setViewConstraints(top: stayHomelabel.bottomAnchor, left: safetyActionView.leftAnchor, right: safetyActionView.rightAnchor, marginTop: 5, marginBottom: 5, marginLeft: 30, marginRight: 5)
         
         let summaryView: UIView = {
             let view = UIView()
@@ -231,19 +218,12 @@ class HomeViewController: UIViewController {
         
         summaryDataStackView.setViewConstraints(top:seeMoreButton.bottomAnchor ,bottom: summaryView.bottomAnchor, left: summaryView.leftAnchor, right: summaryView.rightAnchor, marginTop: 20, marginBottom: 5, marginLeft: 5, marginRight: 5)
         
-        
-        
         let newsUpdatesView: UIView = {
             let view = UIView()
             view.layer.cornerRadius = 10
             view.backgroundColor = .white
             return view
         }()
-        
-        //        let separatorView = UIView()
-        //        separatorView.backgroundColor = .lightGray
-        //        view.addSubview(separatorView)
-        //        separatorView.setViewConstraints(bottom: newsUpdatesView.bottomAnchor, left: newsUpdatesView.leftAnchor, right: newsUpdatesView.rightAnchor, marginLeft: 8, height: 0.75)
         
         view.addSubview(newsUpdatesView)
         newsUpdatesView.setViewConstraints(top: safetyActionView.bottomAnchor, bottom: summaryView.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 10, marginBottom: 10, marginLeft: 10, marginRight: 10)
