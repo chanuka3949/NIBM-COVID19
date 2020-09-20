@@ -97,21 +97,37 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
     
     @objc func handleUpdate() {
         spinner.startAnimating()
-        let data = userImageView.image!.jpegData(compressionQuality: 0.5)
-        uploadPhoto(data: data!, completion: {(isUploaded, downloadURL) in
-            if(isUploaded == false) {
-                self.spinner.stopAnimating()
-                let alert = UIAlertController(title: "Error", message: "Couldn't save user profile data", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                self.present(alert, animated: true)
-                return
-            }
+        if let data = userImageView.image?.jpegData(compressionQuality: 0.5) {
+            uploadPhoto(data: data, completion: {(isUploaded, downloadURL) in
+                if(isUploaded == false) {
+                    self.spinner.stopAnimating()
+                    let alert = UIAlertController(title: "Error", message: "Couldn't save user profile data", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                    self.present(alert, animated: true)
+                    return
+                }
+                let values = [
+                    "firstName": self.firstNameTextField.text as String?,
+                    "lastName": self.lastNameTextField.text as String?,
+                    "userId": self.userIDTextField.text as String?,
+                    "address": self.addressTextView.text as String?,
+                    "imageURL": downloadURL.absoluteString
+                ]
+                
+                Database.database().reference().child("users").child(self.uid!).updateChildValues(values as [AnyHashable : Any]) { (error, ref) in
+                    print("Successfuly Registerd and profile updated")
+                    self.spinner.stopAnimating()
+                    let alert = UIAlertController(title: "Success", message: "User profile data saved", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                    self.present(alert, animated: true)
+                }
+            })
+        } else {
             let values = [
                 "firstName": self.firstNameTextField.text as String?,
                 "lastName": self.lastNameTextField.text as String?,
                 "userId": self.userIDTextField.text as String?,
-                "address": self.addressTextView.text as String?,
-                "imageURL": downloadURL.absoluteString
+                "address": self.addressTextView.text as String?
             ]
             
             Database.database().reference().child("users").child(self.uid!).updateChildValues(values as [AnyHashable : Any]) { (error, ref) in
@@ -121,7 +137,8 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
                 alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
                 self.present(alert, animated: true)
             }
-        })
+        }
+        
     }
     
     func getUserData()  {

@@ -13,6 +13,7 @@ class SurveyResultsViewController: UIViewController {
     
     struct Result {
         var user: String?,
+        userId: String?,
         one: Bool?,
         two: Bool?,
         three: Bool?,
@@ -42,6 +43,7 @@ class SurveyResultsViewController: UIViewController {
             let value = snapshot.value as? NSDictionary
             var result = Result()
             result.user = value?["user"] as? String
+            result.userId = value?["userId"] as? String
             result.one = value?["questionOne"] as? Bool
             result.two = value?["questionTwo"] as? Bool
             result.three = value?["questionThree"] as? Bool
@@ -72,7 +74,7 @@ extension SurveyResultsViewController: UITableViewDelegate, UITableViewDataSourc
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = surveyResultsTableView.dequeueReusableCell(withIdentifier: SurveyResultCell.identifier, for: indexPath) as! SurveyResultCell
         cell.user.text = "User: \(surveyResults[indexPath.row].user ?? "")"
-        cell.userId.text = "User Id: \(surveyResults[indexPath.row].user ?? "")"
+        cell.userId.text = "User Id: \(surveyResults[indexPath.row].userId ?? "")"
         cell.answerOne.text = "Question One: \(surveyResults[indexPath.row].one ?? false ? "True" : "False")"
         cell.answerTwo.text = "Question Two: \(surveyResults[indexPath.row].two ?? false ? "True" : "False")"
         cell.answerThree.text = "Question Three: \(surveyResults[indexPath.row].three ?? false ? "True" : "False")"

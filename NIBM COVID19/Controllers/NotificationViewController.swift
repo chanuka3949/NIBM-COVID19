@@ -24,8 +24,8 @@ class NotificationViewController: UIViewController {
         databaseRef.child(Constants.newsUpdates).observe(.childAdded, with: { [weak self] (snapshot) -> Void in
             let value = snapshot.childSnapshot(forPath: "news").value
             let comment: String = value as! String
-            self!.newsUpdates.append(comment)
-            self!.newsUpdatesTableView.insertRows(at: [IndexPath(row: (self?.newsUpdates.count)!-1, section: 0)], with: UITableView.RowAnimation.automatic)
+            self?.newsUpdates.append(comment)
+            self?.newsUpdatesTableView.insertRows(at: [IndexPath(row: (self?.newsUpdates.count)!-1, section: 0)], with: UITableView.RowAnimation.automatic)
         }) { (error) in
             print("Error Occurred: \(error)")
         }

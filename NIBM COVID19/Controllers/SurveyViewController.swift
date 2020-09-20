@@ -234,6 +234,7 @@ class SurveyViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        getUserData(uid: uid!)
         setupUserInterface()
         presentQuestion(questionNo: questionNo)
     }
@@ -291,10 +292,10 @@ class SurveyViewController: UIViewController {
         }
     }
     
-    func getUserId(uid: String) {
-        databaseRef.child(Constants.users).child(uid).observeSingleEvent(of: .childAdded) { (snapshot) in
+    func getUserData(uid: String) {
+        databaseRef.child(Constants.users).child(uid).observeSingleEvent(of: .value) { (snapshot) in
             let value = snapshot.value as? NSDictionary
-            self.currentUserName = "\(value?["fisrtName"] ?? "") \(value?["lastName"] ?? "")"
+            self.currentUserName = "\(value?["firstName"] ?? "") \(value?["lastName"] ?? "")"
             self.userId = value?["userId"] as? String ?? ""
         }
     }
