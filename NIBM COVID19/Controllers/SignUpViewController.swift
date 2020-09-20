@@ -127,28 +127,60 @@ class SignUpViewController: UIViewController {
         }
     }
     
+    func signUpUser(user: User, completion: @escaping(User, Bool) -> Void) {
+        Auth.auth().createUser(withEmail: user.email!, password: user.password!) { (result, error) in
+            if error != nil {
+                completion(user, false)
+                return
+            }
+            guard (result?.user.uid) != nil else {
+                completion(user, false)
+                return
+            }
+            var userData = user
+            userData.uid = result?.user.uid
+            completion(userData, true)
+        }
+    }
+    
     @objc func handleSignUp() {
         
-        guard let email = emailTextField.text else { return }
-        guard let password = passwordTextField.text else { return }
-        guard let firstName = firstNameTextField.text else { return }
-        guard let lastName = lastNameTextField.text else { return }
-        let role = userRoleSegmentedControl.selectedSegmentIndex
+        if !validateEmail(email: emailTextField.text!) {
+            presentAlert(title: "Warning", message: "Enter a valid email address", actionTitle: "OK", currentVC: self)
+            return
+        }
         
-        var user = User(email: email, firstName: firstName, lastName: lastName, password: password, role: role)
-        spinner.startAnimating()
-        Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
-            if let error = error {
-                print("ERROR: Failed to register user \(error)")
-                self.spinner.stopAnimating()
-                return
+        if passwordTextField.text!.isEmpty {
+            presentAlert(title: "Warning", message: "Password cannot be empty", actionTitle: "OK", currentVC: self)
+            return
+        } else if passwordTextField.text!.count < 6 {
+            presentAlert(title: "Warning", message: "Password should have at least six characters", actionTitle: "OK", currentVC: self)
+            return
+        }
+        
+        if firstNameTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            presentAlert(title: "Warning", message: "First Name cannot be empty", actionTitle: "OK", currentVC: self)
+            return
+        }
+        
+        if lastNameTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            presentAlert(title: "Warning", message: "Last Name cannot be empty", actionTitle: "OK", currentVC: self)
+            return
+        }
+        
+        if !(userRoleSegmentedControl.selectedSegmentIndex == Role.Staff.rawValue || userRoleSegmentedControl.selectedSegmentIndex == Role.Student.rawValue) {
+            presentAlert(title: "Warning", message: "Please select a valid role", actionTitle: "OK", currentVC: self)
+            return
+        }
+        
+        let user = User(email: emailTextField.text!, firstName: firstNameTextField.text!, lastName: lastNameTextField.text!, password: passwordTextField.text!, role: userRoleSegmentedControl.selectedSegmentIndex)
+        
+        signUpUser(user: user) { (user, isSuccessful) in
+            if isSuccessful {
+                self.saveUserProfileData(user: user)
+            } else {
+                self.presentAlert(title: "Error", message: "Login failed, plese try again", actionTitle: "OK", currentVC: self)
             }
-            guard let uid = result?.user.uid else {
-                self.spinner.stopAnimating()
-                return
-            }
-            user.uid = uid
-            self.saveUserProfileData(user: user)
         }
     }
     

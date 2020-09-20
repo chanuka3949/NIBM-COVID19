@@ -20,7 +20,12 @@ class NIBM_COVID19Tests: XCTestCase {
     }
 
     func testExample() throws {
-        // This is an example of a functional test case.
+        
+        //sample data
+        
+        
+        let signInVC = SignInViewController()
+        signInVC.signUpUser(email: <#T##String#>, password: <#T##String#>)
         // Use XCTAssert and related functions to verify your tests produce the correct results.
     }
 

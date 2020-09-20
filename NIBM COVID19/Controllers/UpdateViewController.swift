@@ -136,18 +136,22 @@ class UpdateViewController: UIViewController {
     }
     
     @objc func updateTemperature() {
-        if (temperatureTextField.text?.trimmingCharacters(in: [" "]).isEmpty)! {
+        if !validateTemperature(temp: temperatureTextField.text!) {
+            presentAlert(title: "Warning", message: "Please enter a valid temperature value", actionTitle: "OK", currentVC: self)
+            temperatureTextField.text? = ""
             return
         }
         if lastUpdatedMoreThanADayAgo == false {
-            let alert = UIAlertController(title: "Cannot update temperature", message: "You can only update the temperature once per day", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            self.present(alert, animated: true)
+            presentAlert(title: "Cannot update temperature", message: "You can only update the temperature once per day", actionTitle: "OK", currentVC: self)
             temperatureTextField.text? = ""
             return
         }
         let tempValue: String = (temperatureTextField.text?.trimmingCharacters(in: [" "]))!
-        guard let temp = Float(tempValue) else { return }
+        guard let temp = Float(tempValue) else {
+            presentAlert(title: "Warning", message: "Please enter a valid temperature value", actionTitle: "OK", currentVC: self)
+            temperatureTextField.text? = ""
+            return
+        }
         let riskLevel = calculateRiskLevelByTemp(uid: uid!, temperature: temp)
         user.uid = uid
         user.riskLevel = riskLevel
@@ -158,9 +162,7 @@ class UpdateViewController: UIViewController {
             let values = ["temperature": temp, "modifiedDate": Date().timeIntervalSince1970] as [String : Any]
             databaseRef.child(Constants.userHealth).child(uid!).child(Constants.userTemperature).updateChildValues(values) { (error, ref) in
                 if error != nil {
-                    let alert = UIAlertController(title: "An error occurred", message: "Couldn't save temperature on database", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                    self.present(alert, animated: true)
+                    self.presentAlert(title: "An error occurred", message: "Couldn't save temperature on database", actionTitle: "OK", currentVC: self)
                 }
                 self.databaseRef.child(Constants.userHealth).child(Constants.surveySummary).child(self.uid!).updateChildValues(["riskLevel":riskLevel]) { (error, ref) in
                     if error != nil {
@@ -170,17 +172,12 @@ class UpdateViewController: UIViewController {
                     }
                     self.temperatureTextField.text = ""
                     self.spinner.stopAnimating()
-                    let alert = UIAlertController(title: "Success", message: "Temperature Updated", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil
-                    ))
-                    self.present(alert, animated: true)
+                    self.self.presentAlert(title: "Success", message: "Temperature Updated", actionTitle: "OK", currentVC: self)
                 }
             }
         } catch {
             self.spinner.stopAnimating()
-            let alert = UIAlertController(title: "An error occurred", message: "Couldn't update temperature", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            self.present(alert, animated: true)
+            self.presentAlert(title: "An error occurred", message: "Couldn't update temperature", actionTitle: "OK", currentVC: self)
         }
     }
     

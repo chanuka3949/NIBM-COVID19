@@ -78,12 +78,32 @@ class SignInViewController: UIViewController {
     }
     
     @objc func handleSignIn() {
-        guard let email = emailTextField.text else { return }
-        guard let password = passwordTextField.text else { return }
+        signUpUser(email: emailTextField.text!, password: passwordTextField.text!)
+    }
+    
+    @objc func popViewController() {
+        navigationController?.popViewController(animated: true)
+    }
+    
+    func signUpUser(email: String, password: String) {
+        
+        if !validateEmail(email: email) {
+            presentAlert(title: "Warning", message: "Enter a valid email address", actionTitle: "OK", currentVC: self)
+            return
+        }
+        
+        if password.isEmpty {
+            presentAlert(title: "Warning", message: "Password cannot be empty", actionTitle: "OK", currentVC: self)
+            return
+        } else if password.count < 6 {
+            presentAlert(title: "Warning", message: "Password should have at least six characters", actionTitle: "OK", currentVC: self)
+            return
+        }
+        
         spinner.startAnimating()
         Auth.auth().signIn(withEmail: email, password: password) { (result, error) in
-            if let error = error {
-                print("Failed to login user with error \(error)")
+            if error != nil {
+                self.presentAlert(title: "Error", message: "Login failed", actionTitle: "OK", currentVC: self)
                 self.spinner.stopAnimating()
                 return
             }
@@ -100,10 +120,6 @@ class SignInViewController: UIViewController {
             mainViewController.tabBar.isHidden = false
             self.dismiss(animated: true, completion: nil)
         }
-    }
-    
-    @objc func popViewController() {
-        navigationController?.popViewController(animated: true)
     }
     
     override func viewDidLoad() {

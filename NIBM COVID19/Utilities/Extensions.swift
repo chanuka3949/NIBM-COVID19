@@ -87,7 +87,26 @@ extension UIView {
         
         return view
     }
+}
+
+extension UIViewController {
     
+    func presentAlert(title: String, message: String, actionTitle: String, currentVC: UIViewController) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: actionTitle, style: .default, handler: nil))
+        currentVC.present(alert, animated: true)
+    }
     
+    func validateEmail(email: String) -> Bool {
+        let pattern = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+        let emailPredicate = NSPredicate(format:"SELF MATCHES %@", pattern)
+        return emailPredicate.evaluate(with: email)
+    }
+    
+    func validateTemperature(temp: String) -> Bool {
+        let pattern = "\\d{1,3}\\.?(\\d{1,2})?"
+        let tempPredicate = NSPredicate(format:"SELF MATCHES %@", pattern)
+        return tempPredicate.evaluate(with: temp)
+    }
 }
 
