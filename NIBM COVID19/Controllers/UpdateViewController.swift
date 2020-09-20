@@ -239,7 +239,7 @@ class UpdateViewController: UIViewController {
         
         if(Auth.auth().currentUser?.uid != nil) {
             getUserRole(uid: uid!, completion: { [weak self] role in
-                if role.rawValue == 1 {
+                if role.rawValue == 0 {
                     self!.createNewsItemButton.removeFromSuperview()
                     self!.surveyButton.setViewConstraints(top: self!.view.safeAreaLayoutGuide.topAnchor, left: self!.view.safeAreaLayoutGuide.leftAnchor , right: self!.view.safeAreaLayoutGuide.rightAnchor, marginTop: 10, marginBottom: 10, marginLeft: 10, marginRight: 10, height: 75)
                 }

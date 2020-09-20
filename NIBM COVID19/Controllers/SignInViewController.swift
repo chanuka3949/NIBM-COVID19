@@ -78,47 +78,50 @@ class SignInViewController: UIViewController {
     }
     
     @objc func handleSignIn() {
-        signUpUser(email: emailTextField.text!, password: passwordTextField.text!)
+        if !validateEmail(email: emailTextField.text!) {
+            presentAlert(title: "Warning", message: "Enter a valid email address", actionTitle: "OK", currentVC: self)
+            return
+        }
+        if passwordTextField.text!.isEmpty {
+            presentAlert(title: "Warning", message: "Password cannot be empty", actionTitle: "OK", currentVC: self)
+            return
+        } else if passwordTextField.text!.count < 6 {
+            presentAlert(title: "Warning", message: "Password should have at least six characters", actionTitle: "OK", currentVC: self)
+            return
+        }
+        
+        spinner.startAnimating()
+        signInUser(email: emailTextField.text!, password: passwordTextField.text!) {isSuccessful in
+            self.spinner.stopAnimating()
+            if isSuccessful {
+                let keyWindow = UIApplication.shared.connectedScenes
+                    .filter({$0.activationState == .foregroundActive})
+                    .map({$0 as? UIWindowScene})
+                    .compactMap({$0})
+                    .first?.windows
+                    .filter({$0.isKeyWindow}).first
+                
+                guard let mainViewController = keyWindow?.rootViewController as? TabBarViewController else { return }
+                mainViewController.setupUserInterface()
+                mainViewController.tabBar.isHidden = false
+                self.dismiss(animated: true, completion: nil)
+            } else {
+                self.presentAlert(title: "Error", message: "Login failed", actionTitle: "OK", currentVC: self)
+            }
+        }
     }
     
     @objc func popViewController() {
         navigationController?.popViewController(animated: true)
     }
     
-    func signUpUser(email: String, password: String) {
-        
-        if !validateEmail(email: email) {
-            presentAlert(title: "Warning", message: "Enter a valid email address", actionTitle: "OK", currentVC: self)
-            return
-        }
-        
-        if password.isEmpty {
-            presentAlert(title: "Warning", message: "Password cannot be empty", actionTitle: "OK", currentVC: self)
-            return
-        } else if password.count < 6 {
-            presentAlert(title: "Warning", message: "Password should have at least six characters", actionTitle: "OK", currentVC: self)
-            return
-        }
-        
-        spinner.startAnimating()
+    func signInUser(email: String, password: String, completion: @escaping (Bool) -> Void) {
         Auth.auth().signIn(withEmail: email, password: password) { (result, error) in
             if error != nil {
-                self.presentAlert(title: "Error", message: "Login failed", actionTitle: "OK", currentVC: self)
-                self.spinner.stopAnimating()
+                completion(false)
                 return
             }
-            self.spinner.stopAnimating()
-            let keyWindow = UIApplication.shared.connectedScenes
-                .filter({$0.activationState == .foregroundActive})
-                .map({$0 as? UIWindowScene})
-                .compactMap({$0})
-                .first?.windows
-                .filter({$0.isKeyWindow}).first
-            
-            guard let mainViewController = keyWindow?.rootViewController as? TabBarViewController else { return }
-            mainViewController.setupUserInterface()
-            mainViewController.tabBar.isHidden = false
-            self.dismiss(animated: true, completion: nil)
+            completion(true)
         }
     }
     

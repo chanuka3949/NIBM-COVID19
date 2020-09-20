@@ -175,7 +175,9 @@ class SignUpViewController: UIViewController {
         
         let user = User(email: emailTextField.text!, firstName: firstNameTextField.text!, lastName: lastNameTextField.text!, password: passwordTextField.text!, role: userRoleSegmentedControl.selectedSegmentIndex)
         
+        spinner.startAnimating()
         signUpUser(user: user) { (user, isSuccessful) in
+            self.spinner.stopAnimating()
             if isSuccessful {
                 self.saveUserProfileData(user: user)
             } else {
@@ -190,12 +192,11 @@ class SignUpViewController: UIViewController {
             "lastName": user.lastName!,
             "role": user.role!
             ] as [String : Any]
-        
+        spinner.startAnimating()
         Database.database().reference().child(Constants.users).child(user.uid!).updateChildValues(values) { (error, ref) in
             if let error = error {
                 print("ERROR: Could not save user data to database \(error)")
-                self.spinner.stopAnimating()
-                return
+                self.presentAlert(title: "Error", message: "An error occurred while saving user data. Please update your data in the profile", actionTitle: "OK", currentVC: self)
             }
             self.spinner.stopAnimating()
             print("Successfuly Registerd and Profile created")
