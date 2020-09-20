@@ -166,6 +166,9 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUserInterface()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
         getStats()
         if Auth.auth().currentUser?.uid != nil {
             LocationHandler.sharedInstance.updateUserLocation(uid: uid!)

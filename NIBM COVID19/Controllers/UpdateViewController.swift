@@ -221,7 +221,6 @@ class UpdateViewController: UIViewController {
     func calculateRiskLevelByTemp(uid: String, temperature: Float) -> Int16 {
         var riskLevel: Int16 = 0
         var previousRiskLevel: Int16 = 0
-        
         if temperature > 38 {
             riskLevel = 5
         } else if temperature == 38 {

@@ -38,6 +38,9 @@ class MapViewController: UIViewController {
         super.viewDidLoad()
         LocationHandler.sharedInstance.getLocationServicePermission()
         setupUserLocation()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
         getNearbyUsers()
         removeDistancingUsers()
         setupUserInterface()

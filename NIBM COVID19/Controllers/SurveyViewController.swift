@@ -211,13 +211,13 @@ class SurveyViewController: UIViewController {
     private lazy var q5BodyLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
+        label.text = "Have you had a fever for the past couple of days?"
         label.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.medium)
         label.textColor = .black
         return label
     }()
     private lazy var q5Label: UILabel = {
         let label = UILabel()
-        label.text = "Have you had a fever during the past couple of days?"
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.bold)
         label.textColor = .black
