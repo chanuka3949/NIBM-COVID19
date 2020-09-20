@@ -38,8 +38,6 @@ class LocationHandler: NSObject, CLLocationManagerDelegate {
             locationManager?.requestWhenInUseAuthorization()
         case .authorizedWhenInUse:
             locationManager?.requestAlwaysAuthorization()
-            locationManager?.startUpdatingLocation()
-            locationManager?.desiredAccuracy = kCLLocationAccuracyBest
         case .authorizedAlways:
             locationManager?.startUpdatingLocation()
             locationManager?.desiredAccuracy = kCLLocationAccuracyBest
