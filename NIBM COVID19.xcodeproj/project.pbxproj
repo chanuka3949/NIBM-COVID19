@@ -20,6 +20,8 @@
 		312A321224F95288005E0A1C /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312A321124F95288005E0A1C /* SignInViewController.swift */; };
 		312A321424F952A2005E0A1C /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312A321324F952A2005E0A1C /* SignUpViewController.swift */; };
 		312A321724F96475005E0A1C /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312A321624F96475005E0A1C /* Extensions.swift */; };
+		3178002C25174662002BE9B7 /* SurveyResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3178002B25174662002BE9B7 /* SurveyResultsViewController.swift */; };
+		3178002E25174747002BE9B7 /* SurveyResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3178002D25174747002BE9B7 /* SurveyResultCell.swift */; };
 		319616A1250DD3BA00656C24 /* NewsItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319616A0250DD3BA00656C24 /* NewsItemCell.swift */; };
 		319D23C7250D6F5B0072BDBE /* CreateNewsItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319D23C6250D6F5B0072BDBE /* CreateNewsItemViewController.swift */; };
 		31AE54EB24FD684600B5B271 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AE54EA24FD684600B5B271 /* Constants.swift */; };
@@ -80,6 +82,8 @@
 		312A321124F95288005E0A1C /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
 		312A321324F952A2005E0A1C /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		312A321624F96475005E0A1C /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		3178002B25174662002BE9B7 /* SurveyResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyResultsViewController.swift; sourceTree = "<group>"; };
+		3178002D25174747002BE9B7 /* SurveyResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyResultCell.swift; sourceTree = "<group>"; };
 		319616A0250DD3BA00656C24 /* NewsItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsItemCell.swift; sourceTree = "<group>"; };
 		319D23C6250D6F5B0072BDBE /* CreateNewsItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateNewsItemViewController.swift; sourceTree = "<group>"; };
 		31AE54EA24FD684600B5B271 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -208,6 +212,7 @@
 				31CA207C24FA353F005103AE /* TabBarViewController.swift */,
 				31CA207E24FA8DEB005103AE /* MapViewController.swift */,
 				319D23C6250D6F5B0072BDBE /* CreateNewsItemViewController.swift */,
+				3178002B25174662002BE9B7 /* SurveyResultsViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -226,6 +231,7 @@
 			isa = PBXGroup;
 			children = (
 				319616A0250DD3BA00656C24 /* NewsItemCell.swift */,
+				3178002D25174747002BE9B7 /* SurveyResultCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -504,6 +510,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				31CA207D24FA353F005103AE /* TabBarViewController.swift in Sources */,
+				3178002C25174662002BE9B7 /* SurveyResultsViewController.swift in Sources */,
 				31CA206F24FA17AC005103AE /* NotificationViewController.swift in Sources */,
 				31C72CDC25021CA30027B243 /* LocationHandler.swift in Sources */,
 				31CA207124FA17BE005103AE /* SurveyViewController.swift in Sources */,
@@ -523,6 +530,7 @@
 				312A321724F96475005E0A1C /* Extensions.swift in Sources */,
 				31CA206D24FA1782005103AE /* SettingsViewController.swift in Sources */,
 				310CD3952515BC33000DF684 /* User.swift in Sources */,
+				3178002E25174747002BE9B7 /* SurveyResultCell.swift in Sources */,
 				31CA207924FA183D005103AE /* UpdateViewController.swift in Sources */,
 				31CA207F24FA8DEB005103AE /* MapViewController.swift in Sources */,
 				31AE54EB24FD684600B5B271 /* Constants.swift in Sources */,

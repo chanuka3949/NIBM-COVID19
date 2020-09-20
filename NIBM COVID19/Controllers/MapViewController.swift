@@ -107,7 +107,7 @@ class MapViewController: UIViewController {
         mapView.showsUserLocation = true
         mapView.userTrackingMode = .follow
         guard let location = locationManager?.location else {return}
-        let region = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: 1000, longitudinalMeters: 1000)
+        let region = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: 50, longitudinalMeters: 50)
         mapView.setRegion(region, animated: true)
     }
     

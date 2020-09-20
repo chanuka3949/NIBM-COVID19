@@ -43,6 +43,21 @@ class UpdateViewController: UIViewController {
         return button
     }()
     
+    private lazy var viewSurveyResultsButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("View Survey Results", for: .normal)
+        button.layer.cornerRadius = 5
+        button.backgroundColor = .white
+        button.setTitleColor(.black, for: .normal)
+        button.addTarget(self, action: #selector(viewSurveyResults), for: .touchUpInside)
+        return button
+    }()
+    
+    @objc func viewSurveyResults() {
+        let surveyResultsViewController = SurveyResultsViewController()
+        navigationController?.pushViewController(surveyResultsViewController, animated: true)
+    }
+    
     private lazy var surveyButton: UIButton = {
         let button = UIButton()
         button.setTitle("Take Survey", for: .normal)
@@ -183,11 +198,10 @@ class UpdateViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(red: 244/255, green: 244/255, blue: 244/255, alpha: 1)
+        setupUserInterface()
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        setupUserInterface()
         if(Auth.auth().currentUser?.uid != nil) {
             fetchUserTemperatureDate(uid: uid!)
         } else {
@@ -238,25 +252,13 @@ class UpdateViewController: UIViewController {
         navigationController?.navigationBar.topItem?.title = "Updates"
         view.backgroundColor = UIColor(red: 225/255, green: 225/255, blue: 225/255, alpha: 1)
         
-        view.addSubview(createNewsItemButton)
         view.addSubview(surveyButton)
         view.addSubview(lastUpdatedTemperatureLabel)
         view.addSubview(lastUpdatedTemperatureDateLabel)
         view.addSubview(temperatureTextField)
         view.addSubview(updateTemperatureButton)
         
-        createNewsItemButton.setViewConstraints(top: view.safeAreaLayoutGuide.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor , right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 10, marginBottom: 10, marginLeft: 10, marginRight: 10, height: 75)
-        
-        if(Auth.auth().currentUser?.uid != nil) {
-            getUserRole(uid: uid!, completion: { [weak self] role in
-                if role.rawValue == 0 {
-                    self!.createNewsItemButton.removeFromSuperview()
-                    self!.surveyButton.setViewConstraints(top: self!.view.safeAreaLayoutGuide.topAnchor, left: self!.view.safeAreaLayoutGuide.leftAnchor , right: self!.view.safeAreaLayoutGuide.rightAnchor, marginTop: 10, marginBottom: 10, marginLeft: 10, marginRight: 10, height: 75)
-                }
-            })
-        }
-        
-        surveyButton.setViewConstraints(top: createNewsItemButton.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor , right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 10, marginBottom: 10, marginLeft: 10, marginRight: 10, height: 75)
+        surveyButton.setViewConstraints(top: view.safeAreaLayoutGuide.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor , right: view.safeAreaLayoutGuide.rightAnchor, marginTop: 10, marginBottom: 10, marginLeft: 10, marginRight: 10, height: 75)
         
         lastUpdatedTemperatureLabel.setViewConstraints(top: surveyButton.bottomAnchor, marginTop: 20, marginBottom: 10, marginLeft: 10, marginRight: 10)
         lastUpdatedTemperatureLabel.centerX(view: view)
@@ -269,6 +271,17 @@ class UpdateViewController: UIViewController {
         
         updateTemperatureButton.setViewConstraints(top: temperatureTextField.bottomAnchor, marginTop: 10, width: view.frame.size.width / 3, height: 40)
         updateTemperatureButton.centerX(view: view)
+        
+        if(Auth.auth().currentUser?.uid != nil) {
+            getUserRole(uid: uid!, completion: { [weak self] role in
+                if role.rawValue == 1 {
+                    self!.view.addSubview(self!.createNewsItemButton)
+                    self!.view.addSubview(self!.viewSurveyResultsButton)
+                    self!.createNewsItemButton.setViewConstraints(top: self!.updateTemperatureButton.bottomAnchor, left: self!.view.safeAreaLayoutGuide.leftAnchor , right: self!.view.safeAreaLayoutGuide.rightAnchor, marginTop: 20, marginBottom: 10, marginLeft: 10, marginRight: 10, height: 75)
+                    self!.viewSurveyResultsButton.setViewConstraints(top: self!.createNewsItemButton.bottomAnchor, left: self!.view.safeAreaLayoutGuide.leftAnchor , right: self!.view.safeAreaLayoutGuide.rightAnchor, marginTop: 10, marginBottom: 10, marginLeft: 10, marginRight: 10, height: 75)
+                }
+            })
+        }
         
         spinner.translatesAutoresizingMaskIntoConstraints = false
         spinner.color = .black

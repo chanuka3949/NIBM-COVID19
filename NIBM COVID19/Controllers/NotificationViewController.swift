@@ -16,10 +16,9 @@ class NotificationViewController: UIViewController {
     
     private var newsUpdatesTableView: UITableView = {
         let tableView = UITableView()
-        tableView.register(NewsItemCell.self, forCellReuseIdentifier: "NewsItemCell")
+        tableView.register(NewsItemCell.self, forCellReuseIdentifier: NewsItemCell.identifier)
         return tableView
     }()
-    
     
     func fetchNewsUpdates() {
         databaseRef.child(Constants.newsUpdates).observe(.childAdded, with: { [weak self] (snapshot) -> Void in
@@ -49,8 +48,9 @@ extension NotificationViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         newsUpdates.count
     }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = newsUpdatesTableView.dequeueReusableCell(withIdentifier: "NewsItemCell", for: indexPath) as! NewsItemCell
+        let cell = newsUpdatesTableView.dequeueReusableCell(withIdentifier: NewsItemCell.identifier, for: indexPath) as! NewsItemCell
         cell.newsItemLabel.text = newsUpdates[indexPath.row]
         return cell
     }

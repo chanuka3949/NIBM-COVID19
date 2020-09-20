@@ -14,6 +14,9 @@ class SurveyViewController: UIViewController {
     
     private var questionNo = 1
     private let uid = Auth.auth().currentUser?.uid
+    private var currentUserName = ""
+    private var userId = ""
+    private let databaseRef = Database.database().reference()
     private let spinner = UIActivityIndicatorView(style: .large)
     private let context = (UIApplication.shared.delegate as? AppDelegate)!.persistentContainer.viewContext
     private var resultList = [SurveyResult]()
@@ -288,6 +291,14 @@ class SurveyViewController: UIViewController {
         }
     }
     
+    func getUserId(uid: String) {
+        databaseRef.child(Constants.users).child(uid).observeSingleEvent(of: .childAdded) { (snapshot) in
+            let value = snapshot.value as? NSDictionary
+            self.currentUserName = "\(value?["fisrtName"] ?? "") \(value?["lastName"] ?? "")"
+            self.userId = value?["userId"] as? String ?? ""
+        }
+    }
+    
     func saveSurveyData() {
         var riskLevel = 0
         result.uid = uid
@@ -302,25 +313,25 @@ class SurveyViewController: UIViewController {
         user.riskLevel = calculateNewRiskLevelBySurvey(newRiskLevel: Int16(riskLevel))
         user.modifiedDate = Date()
         resultList.append(result)
-        
         do {
             spinner.startAnimating()
             try context.save()
-            let values = ["userId": uid!,
+            let values = ["user": currentUserName,
+                          "userId" : userId,
                           "questionOne": result.question1,
                           "questionTwo": result.question2,
                           "questionThree": result.question3,
                           "questionFour": result.question4,
-                          "questioFive": result.question5,
+                          "questionFive": result.question5,
                           "riskLevel": user.riskLevel,
                           "modifiedDate": result.modifiedDate?.timeIntervalSince1970 as Any] as [String : Any]
-            Database.database().reference().child(Constants.userHealth).child(Constants.surveyResults).child(uid!).updateChildValues(values) { (error, ref) in
+            databaseRef.child(Constants.userHealth).child(Constants.surveyResults).child(uid!).updateChildValues(values) { (error, ref) in
                 if error != nil {
                     let alert = UIAlertController(title: "An error occurred", message: "Couldn't save survey data on database", preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
                     self.present(alert, animated: true)
                 }
-                Database.database().reference().child(Constants.userHealth).child(Constants.surveySummary).child(self.uid!).updateChildValues(["riskLevel":self.user.riskLevel]) { (error, ref) in
+                self.databaseRef.child(Constants.userHealth).child(Constants.surveySummary).child(self.uid!).updateChildValues(["riskLevel":self.user.riskLevel]) { (error, ref) in
                     if error != nil {
                         let alert = UIAlertController(title: "An error occurred", message: "Couldn't save survey summary on database", preferredStyle: .alert)
                         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))

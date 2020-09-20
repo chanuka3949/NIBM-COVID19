@@ -11,8 +11,6 @@ import Firebase
 
 class SettingsViewController: UIViewController {
     
-    var authStateHandler: (Any)? = nil
-    
     let profileButton: UIButton = {
         let button = UIButton()
         button.setTitle("Profile", for: .normal)
@@ -77,19 +75,8 @@ class SettingsViewController: UIViewController {
     
     @objc func handleSignOut()  {
         signOutUser()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        authStateHandler = Auth.auth().addStateDidChangeListener { (auth, user) in
-            if auth.currentUser?.uid == nil {
-                self.view.subviews.forEach({ $0.removeFromSuperview() })
-                self.setupUserInterface()
-            }
-        }
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        Auth.auth().removeStateDidChangeListener(authStateHandler as! NSObjectProtocol)
+        self.view.subviews.forEach({ $0.removeFromSuperview() })
+        self.setupUserInterface()
     }
     
     @objc func goToLaunchScreen() {
